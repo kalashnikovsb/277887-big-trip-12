@@ -1,16 +1,7 @@
+import {getCorrectPreposition} from "../utils.js";
+
 export const createEventItem = (event) => {
   const {eventType, destination, additionalOptions, time, price} = event;
-
-  const getCorrectPreposition = (word) => {
-    switch (word) {
-      case `Check-in`:
-      case `Sightseeing`:
-      case `Restaurant`:
-        return `${word} in`;
-      default:
-        return `${word} to`;
-    }
-  };
 
   const renderAdditionalOptions = (options) => {
     return Object.entries(options).map(([key, value]) => {
