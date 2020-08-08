@@ -8,7 +8,7 @@ const DESCRIPTIONS = [
   `Aliquam erat volutpat.`, `Nunc fermentum tortor ac porta dapibus.`,
   `In rutrum ac purus sit amet tempus.`
 ];
-const EVENT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check`, `Sightseeing`, `Restaurant`];
+const EVENT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 const CITIES = [`Moscow`, `Saint Petersburg`, `Krasnoyarsk`, `Yekaterinburg`, `Khabarovsk`, `Omsk`, `Irkutsk`, `Krasnodar`];
 const ADDITIONAL_OPTIONS = [`Order Uber`, `Add luggage`, `Rent a car`, `Switch to comfort`, `Add breakfast`, `Book tickets`, `Lunch in city`];
 const MIN_NUMBER_OPTIONS = 0;
@@ -50,6 +50,7 @@ const generateDestinationPhotos = () => {
 };
 
 const generateTime = () => {
+  // Функция для добавления нуля вначале если число меньше 10
   const getNiceFormat = (number) => {
     if (number < 10) {
       number = `0${number}`;
@@ -66,14 +67,16 @@ const generateTime = () => {
   let endTime = `${getNiceFormat(randomTime.getHours())}:${getNiceFormat(randomTime.getMinutes())}`;
 
   let time = {};
+  // Подстрока с датой без секунд и миллисекунд
+  time.date = randomTime.toISOString().slice(0, 10);
   time.start = startTime;
   time.end = endTime;
   return time;
 };
 
-export const generateEventItem = () => {
+export const generateEvent = () => {
   return {
-    routePointType: getRandomArrayElement(EVENT_TYPES),
+    eventType: getRandomArrayElement(EVENT_TYPES),
     destination: getRandomArrayElement(CITIES),
     destinationInfo: getRandomArrayElement(DESCRIPTIONS),
     destinationPhotos: generateDestinationPhotos(),

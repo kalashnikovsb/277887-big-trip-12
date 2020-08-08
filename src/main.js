@@ -1,4 +1,4 @@
-const EVENTS_COUNT = 3;
+const EVENTS_COUNT = 20;
 
 const tripHeader = document.querySelector(`.trip-main`);
 const tripHeaderMenu = tripHeader.querySelector(`.trip-controls`);
@@ -14,6 +14,7 @@ import {createDaysList} from "./view/createDaysList.js";
 import {createDayItem} from "./view/createDayItem.js";
 import {createEventsList} from "./view/createEventsList.js";
 import {createEventItem} from "./view/createEventItem.js";
+import {generateEvent} from "./mock/generateEvent.js";
 
 const render = (container, template, position) => {
   container.insertAdjacentHTML(position, template);
@@ -36,6 +37,8 @@ render(day, createEventsList(), `beforeend`);
 
 const eventsList = day.querySelector(`.trip-events__list`);
 
-for (let i = 0; i < EVENTS_COUNT; i++) {
-  render(eventsList, createEventItem(), `beforeend`);
+const events = new Array(EVENTS_COUNT).fill().map(generateEvent);
+
+for (const event of events) {
+  render(eventsList, createEventItem(event), `beforeend`);
 }
