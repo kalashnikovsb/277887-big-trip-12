@@ -20,4 +20,21 @@ const getCorrectPreposition = (value) => {
   }
 };
 
-export {getRandomInteger, getRandomArrayElement, getCorrectPreposition};
+const getNiceFormat = (number) => {
+  if (number < 10) {
+    number = `0${number}`;
+  }
+  return number;
+};
+
+const getCurrentDateTimeString = () => {
+  const time = new Date();
+  const date = getNiceFormat(time.getDate());
+  const month = getNiceFormat(time.getMonth() + 1);
+  const year = String(time.getFullYear()).slice(2);
+  const hours = getNiceFormat(time.getHours());
+  const minutes = getNiceFormat(time.getMinutes());
+  return `${date}/${month}/${year} ${hours}:${minutes}`;
+};
+
+export {getRandomInteger, getRandomArrayElement, getCorrectPreposition, getNiceFormat, getCurrentDateTimeString};

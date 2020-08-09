@@ -3,9 +3,9 @@ import {createHeaderMenu} from "./view/createHeaderMenu.js";
 import {createTimeFilter} from "./view/createTimeFilter.js";
 import {createSorting} from "./view/createSorting.js";
 import {createEventWithDestination} from "./view/createEventWithDestination.js";
-import {createDaysList} from "./view/createDaysList.js";
+import {createDayList} from "./view/createDayList.js";
 import {createDayItem} from "./view/createDayItem.js";
-import {createEventsList} from "./view/createEventsList.js";
+import {createEventList} from "./view/createEventList.js";
 import {createEventItem} from "./view/createEventItem.js";
 import {EVENTS_COUNT} from "./const.js";
 import {getRandomArrayElement} from "./utils.js";
@@ -30,18 +30,18 @@ render(tripHeaderCaptions[0], createHeaderMenu(), `afterend`);
 render(tripHeaderCaptions[1], createTimeFilter(), `afterend`);
 render(tripEvents, createSorting(), `beforeend`);
 render(tripEvents, createEventWithDestination(randomEvent), `beforeend`);
-render(tripEvents, createDaysList(), `beforeend`);
+render(tripEvents, createDayList(), `beforeend`);
 
-const daysList = tripEvents.querySelector(`.trip-days`);
+const dayList = tripEvents.querySelector(`.trip-days`);
 
-render(daysList, createDayItem(), `beforeend`);
+render(dayList, createDayItem(), `beforeend`);
 
-const day = daysList.querySelector(`.day`);
+const day = dayList.querySelector(`.day`);
 
-render(day, createEventsList(), `beforeend`);
+render(day, createEventList(), `beforeend`);
 
-const eventsList = day.querySelector(`.trip-events__list`);
+const eventList = day.querySelector(`.trip-events__list`);
 
 for (const event of events) {
-  render(eventsList, createEventItem(event), `beforeend`);
+  render(eventList, createEventItem(event), `beforeend`);
 }

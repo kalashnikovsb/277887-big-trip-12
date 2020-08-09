@@ -1,24 +1,21 @@
-import {getRandomInteger, getRandomArrayElement} from "../utils.js";
+import {getRandomInteger, getRandomArrayElement, getNiceFormat} from "../utils.js";
 import {
   DESCRIPTIONS,
   EVENT_TYPES,
   CITIES,
   ADDITIONAL_OPTIONS,
-  MIN_NUMBER_OPTIONS,
-  MAX_NUMBER_OPTIONS,
   MIN_NUMBER_PHOTOS,
   MAX_NUMBER_PHOTOS,
   MIN_PRICE,
   MAX_PRICE,
 } from "../const.js";
 
-const generateAdditionalOptions = () => {
-  const optionsCount = getRandomInteger(MIN_NUMBER_OPTIONS, MAX_NUMBER_OPTIONS);
+const generateAdditionalOptions = (optionsArray) => {
+  const optionsCount = getRandomInteger(0, optionsArray.length - 1);
   const optionsList = {};
   for (let i = 0; i < optionsCount; i++) {
-    const randomOption = getRandomArrayElement(ADDITIONAL_OPTIONS);
-    const randomPrice = getRandomInteger(MIN_PRICE, MAX_PRICE);
-    optionsList[randomOption] = randomPrice;
+    const randomOption = getRandomArrayElement(optionsArray);
+    optionsList[randomOption[0]] = randomOption[1];
   }
   return optionsList;
 };
@@ -27,20 +24,12 @@ const generateDestinationPhotos = () => {
   const photosCount = getRandomInteger(MIN_NUMBER_PHOTOS, MAX_NUMBER_PHOTOS);
   const photosList = {};
   for (let i = 0; i < photosCount; i++) {
-    photosList[i] = `http://picsum.photos/248/152?r=${Math.random()}`;
+    photosList[`${i}`] = `http://picsum.photos/248/152?r=${Math.random()}`;
   }
   return photosList;
 };
 
 const generateTime = () => {
-  // Функция для добавления нуля вначале если число меньше 10
-  const getNiceFormat = (number) => {
-    if (number < 10) {
-      number = `0${number}`;
-    }
-    return number;
-  };
-
   // Полтора часа
   let milliseconds = 1000 * 60 * 90;
   let randomTime = new Date();
@@ -64,7 +53,7 @@ export const generateEvent = () => {
     destination: getRandomArrayElement(CITIES),
     destinationInfo: getRandomArrayElement(DESCRIPTIONS),
     destinationPhotos: generateDestinationPhotos(),
-    additionalOptions: generateAdditionalOptions(),
+    additionalOptions: generateAdditionalOptions(ADDITIONAL_OPTIONS),
     time: generateTime(),
     price: getRandomInteger(MIN_PRICE, MAX_PRICE),
   };
