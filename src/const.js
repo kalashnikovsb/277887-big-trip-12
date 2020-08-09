@@ -11,7 +11,13 @@ const DESCRIPTIONS = [
 ];
 const EVENT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 const CITIES = [`Moscow`, `Saint Petersburg`, `Krasnoyarsk`, `Yekaterinburg`, `Khabarovsk`, `Omsk`, `Irkutsk`, `Krasnodar`];
-const ADDITIONAL_OPTIONS = [[`Add luggage`, 30], [`Switch to comfort`, 100], [`Add meal`, 15], [`Choose seats`, 5], [`Travel by train`, 40]];
+const ADDITIONAL_OPTIONS = [
+  {name: `Add luggage`, price: 30},
+  {name: `Switch to comfort`, price: 100},
+  {name: `Add meal`, price: 15},
+  {name: `Choose seats`, price: 5},
+  {name: `Travel by train`, price: 40}
+];
 const MIN_NUMBER_PHOTOS = 0;
 const MAX_NUMBER_PHOTOS = 10;
 const MIN_PRICE = 10;

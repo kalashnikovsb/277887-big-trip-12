@@ -1,4 +1,4 @@
-import {getRandomInteger, getCorrectPreposition} from "../utils.js";
+import {getCorrectPreposition} from "../utils.js";
 import {
   EVENT_TYPES,
   CITIES,
@@ -7,7 +7,7 @@ import {
 
 
 export const createEventWithDestination = (event) => {
-  const {eventType, destination, destinationInfo, destinationPhotos, time} = event;
+  const {eventType, destination, destinationInfo, destinationPhotos, timeStart, timeEnd, additionalOptions} = event;
 
   const transferEvents = EVENT_TYPES.slice(0, 7);
   const activityEvents = EVENT_TYPES.slice(7);
@@ -33,14 +33,20 @@ export const createEventWithDestination = (event) => {
   };
 
   const renderAdditionalOptions = (options) => {
-    return options.map(([key, value]) => {
+    // Тут я получаю массив названий опций
+    let keys = [];
+    for (let option of options) {
+      keys.push(Object.entries(option)[0][1]);
+    }
+    // По полученному массиву я подсвечиваю у данного события те опции, которые у него имеются
+    return ADDITIONAL_OPTIONS.map((obj) => {
       return (
         `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${key}-1" type="checkbox" name="event-offer-${key}" ${getRandomInteger(0, 1) ? `checked` : ``}>
-          <label class="event__offer-label" for="event-offer-${key}-1">
-            <span class="event__offer-title">${key}</span>
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${obj.name}-1" type="checkbox" name="event-offer-${obj.name}" ${keys.indexOf(obj.name) !== -1 ? `checked` : ``}>
+          <label class="event__offer-label" for="event-offer-${obj.name}-1">
+            <span class="event__offer-title">${obj.name}</span>
             &plus;
-            &euro;&nbsp;<span class="event__offer-price">${value}</span>
+            &euro;&nbsp;<span class="event__offer-price">${obj.price}</span>
           </label>
         </div>`
       );
@@ -48,7 +54,7 @@ export const createEventWithDestination = (event) => {
   };
 
   const renderPhotos = (photos) => {
-    return Object.entries(photos).map(([, value]) => {
+    return photos.map((value) => {
       return `<img class="event__photo" src="${value}" alt="Event photo">`;
     }).join(``);
   };
@@ -90,12 +96,12 @@ export const createEventWithDestination = (event) => {
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="09/08/20 ${time.start}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="09/08/20 ${timeStart}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="09/08/20 ${time.end}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="09/08/20 ${timeEnd}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -113,7 +119,7 @@ export const createEventWithDestination = (event) => {
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
           <div class="event__available-offers">
-            ${renderAdditionalOptions(ADDITIONAL_OPTIONS)}
+            ${renderAdditionalOptions(additionalOptions)}
           </div>
         </section>
 

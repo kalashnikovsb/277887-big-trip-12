@@ -1,15 +1,15 @@
 import {getCorrectPreposition} from "../utils.js";
 
 export const createEventItem = (event) => {
-  const {eventType, destination, additionalOptions, time, price} = event;
+  const {eventType, destination, additionalOptions, timeStart, timeEnd, price} = event;
 
   const renderAdditionalOptions = (options) => {
-    return Object.entries(options).map(([key, value]) => {
+    return options.map((option) => {
       return `
         <li class="event__offer">
-          <span class="event__offer-title">${key}</span>
+          <span class="event__offer-title">${option.name}</span>
           &plus;&euro;&nbsp;
-          <span class="event__offer-price">${value}</span>
+          <span class="event__offer-price">${option.price}</span>
        </li>`;
     }).join(``);
   };
@@ -23,9 +23,13 @@ export const createEventItem = (event) => {
         <h3 class="event__title">${getCorrectPreposition(eventType)} ${destination}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${time.date}T${time.start}">${time.start}</time>
+            <time class="event__start-time" datetime="
+            ${timeStart.toISOString().slice(0, 10)}T${timeStart.toISOString().slice(11, 16)}">${timeStart.toISOString().slice(11, 16)}
+            </time>
             &mdash;
-            <time class="event__end-time" datetime="${time.date}T${time.end}">${time.end}</time>
+            <time class="event__end-time" datetime="
+            ${timeEnd.toISOString().slice(0, 10)}T${timeEnd.toISOString().slice(11, 16)}">${timeEnd.toISOString().slice(11, 16)}
+            </time>
           </p>
           <p class="event__duration">90M</p>
         </div>
