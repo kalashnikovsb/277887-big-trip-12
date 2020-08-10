@@ -1,4 +1,15 @@
-export const createTripInfo = () => {
+export const createTripInfo = (events) => {
+
+  const getAllDestinations = (events) => {
+    const destinations = new Set();
+    for (let event of events) {
+      destinations.add(event.destination);
+    }
+    return Array.from(destinations);
+  };
+
+  console.log(getAllDestinations(events));
+
   return (
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">

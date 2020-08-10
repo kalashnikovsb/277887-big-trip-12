@@ -1,4 +1,4 @@
-import {getCorrectPreposition} from "../utils.js";
+import {getCorrectPreposition, parseTimeToArray} from "../utils.js";
 import {
   EVENT_TYPES,
   CITIES,
@@ -59,6 +59,11 @@ export const createEventWithDestination = (event) => {
     }).join(``);
   };
 
+  const renderCorrectTime = (date) => {
+    const [year, month, day, hours, minutes] = parseTimeToArray(date);
+    return `${String(year).slice(-2)}/${month}/${day} ${hours}:${minutes}`;
+  };
+
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
       <header class="event__header">
@@ -96,12 +101,12 @@ export const createEventWithDestination = (event) => {
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="09/08/20 ${timeStart}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${renderCorrectTime(timeStart)}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="09/08/20 ${timeEnd}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${renderCorrectTime(timeEnd)}">
         </div>
 
         <div class="event__field-group  event__field-group--price">

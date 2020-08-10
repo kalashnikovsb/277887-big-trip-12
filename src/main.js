@@ -1,3 +1,4 @@
+import {EVENTS_COUNT} from "./const.js";
 import {createTripInfo} from "./view/createTripInfo.js";
 import {createHeaderMenu} from "./view/createHeaderMenu.js";
 import {createTimeFilter} from "./view/createTimeFilter.js";
@@ -7,7 +8,6 @@ import {createDayList} from "./view/createDayList.js";
 import {createDayItem} from "./view/createDayItem.js";
 import {createEventList} from "./view/createEventList.js";
 import {createEventItem} from "./view/createEventItem.js";
-import {EVENTS_COUNT} from "./const.js";
 import {generateEvent} from "./mock/generateEvent.js";
 
 const tripHeader = document.querySelector(`.trip-main`);
@@ -19,10 +19,16 @@ const render = (container, template, position) => {
   container.insertAdjacentHTML(position, template);
 };
 
-// Генерирую события
-const events = new Array(EVENTS_COUNT).fill().map(generateEvent);
+const arraySortByTime = (first, second) => {
+  const firstTime = first.timeStart;
+  const secondValue = second.timeStart;
+  return firstTime - secondValue;
+};
 
-render(tripHeader, createTripInfo(), `afterbegin`);
+// Генерирую события и сортирую по времени
+const events = new Array(EVENTS_COUNT).fill().map(generateEvent).sort(arraySortByTime);
+
+render(tripHeader, createTripInfo(events), `afterbegin`);
 render(tripHeaderCaptions[0], createHeaderMenu(), `afterend`);
 render(tripHeaderCaptions[1], createTimeFilter(), `afterend`);
 render(tripEvents, createSorting(), `beforeend`);

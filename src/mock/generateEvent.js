@@ -36,21 +36,24 @@ const generateTime = () => {
   const randomTime = new Date();
   randomTime.setFullYear(2020);
   randomTime.setMonth(7);
-  randomTime.setDate(getRandomInteger(0, 31));
+  randomTime.setDate(getRandomInteger(1, 10));
   randomTime.setHours(getRandomInteger(0, 23));
   randomTime.setMinutes(getRandomInteger(0, 59));
   return randomTime;
 };
 
 export const generateEvent = () => {
+  const timeStart = generateTime();
+  const timeEnd = new Date(timeStart.getTime() + (90 * 60 * 1000));
+
   return {
     eventType: getRandomArrayElement(EVENT_TYPES),
     destination: getRandomArrayElement(CITIES),
     destinationInfo: getRandomArrayElement(DESCRIPTIONS),
     destinationPhotos: generateDestinationPhotos(),
     additionalOptions: generateAdditionalOptions(ADDITIONAL_OPTIONS),
-    timeStart: generateTime(),
-    timeEnd: generateTime(),
+    timeStart,
+    timeEnd,
     price: getRandomInteger(MIN_PRICE, MAX_PRICE),
   };
 };

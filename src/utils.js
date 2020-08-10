@@ -27,14 +27,23 @@ const getNiceFormat = (number) => {
   return number;
 };
 
-const getCurrentDateTimeString = () => {
-  const time = new Date();
-  const date = getNiceFormat(time.getDate());
-  const month = getNiceFormat(time.getMonth() + 1);
-  const year = String(time.getFullYear()).slice(2);
-  const hours = getNiceFormat(time.getHours());
-  const minutes = getNiceFormat(time.getMinutes());
-  return `${date}/${month}/${year} ${hours}:${minutes}`;
+const parseTimeToArray = (date) => {
+  const year = date.getFullYear();
+
+  // 9 вместо 10, потому что номер месяца 0-11, а не 1-12
+  let month = date.getMonth();
+  month = (month < 9) ? `0${month + 1}` : `${month + 1}`;
+
+  let day = date.getDate();
+  day = (day < 10) ? `0${day}` : `${day}`;
+
+  let hours = date.getHours();
+  hours = (hours < 10) ? `0${hours}` : `${hours}`;
+
+  let minutes = date.getMinutes();
+  minutes = (minutes < 10) ? `0${minutes}` : `${minutes}`;
+
+  return [year, month, day, hours, minutes];
 };
 
-export {getRandomInteger, getRandomArrayElement, getCorrectPreposition, getNiceFormat, getCurrentDateTimeString};
+export {getRandomInteger, getRandomArrayElement, getCorrectPreposition, getNiceFormat, parseTimeToArray};

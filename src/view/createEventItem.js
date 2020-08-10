@@ -1,4 +1,4 @@
-import {getCorrectPreposition} from "../utils.js";
+import {getCorrectPreposition, parseTimeToArray} from "../utils.js";
 
 export const createEventItem = (event) => {
   const {eventType, destination, additionalOptions, timeStart, timeEnd, price} = event;
@@ -14,6 +14,11 @@ export const createEventItem = (event) => {
     }).join(``);
   };
 
+  const renderCorrectTime = (date) => {
+    const [year, month, day, hours, minutes] = parseTimeToArray(date);
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
   return (
     `<li class="trip-events__item">
       <div class="event">
@@ -24,11 +29,11 @@ export const createEventItem = (event) => {
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="
-            ${timeStart.toISOString().slice(0, 10)}T${timeStart.toISOString().slice(11, 16)}">${timeStart.toISOString().slice(11, 16)}
+            ${renderCorrectTime(timeStart)}">${timeStart.toString().slice(16, 21)}
             </time>
             &mdash;
             <time class="event__end-time" datetime="
-            ${timeEnd.toISOString().slice(0, 10)}T${timeEnd.toISOString().slice(11, 16)}">${timeEnd.toISOString().slice(11, 16)}
+            ${renderCorrectTime(timeEnd)}">${timeEnd.toString().slice(16, 21)}
             </time>
           </p>
           <p class="event__duration">90M</p>
