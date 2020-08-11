@@ -8,6 +8,7 @@ import {createDayList} from "./view/createDayList.js";
 import {createDayItem} from "./view/createDayItem.js";
 import {createEventList} from "./view/createEventList.js";
 import {createEventItem} from "./view/createEventItem.js";
+import {parseTimeToArray} from "./utils.js";
 import {generateEvent} from "./mock/generateEvent.js";
 
 const tripHeader = document.querySelector(`.trip-main`);
@@ -25,8 +26,33 @@ const arraySortByTime = (first, second) => {
   return firstTime - secondValue;
 };
 
+const getDatesObject = (array) => {
+  // Создаю объект, у которого ключи это уникальные даты событий
+  let dates = {};
+  array.forEach((item) => {
+    const [year, month, day] = parseTimeToArray(item.timeStart);
+    const key = `${year}-${month}-${day}`;
+    // Присваиваю каждому ключу пустой массив, в который буду класть события
+    dates[key] = [];
+  });
+  // Прохожу все ключи
+  for (let key in dates) {
+    // Для каждого ключа проверяю каждое событие на совпадение даты
+    array.forEach((item) => {
+      const [year, month, day] = parseTimeToArray(item.timeStart);
+      // Если ключ и дата события совпадает, то кладу событие в массив
+      if (key === `${year}-${month}-${day}`) {
+        dates[key].push(item);
+      }
+    });
+  }
+  return dates;
+};
+
 // Генерирую события и сортирую по времени
 const events = new Array(EVENTS_COUNT).fill().map(generateEvent).sort(arraySortByTime);
+// Созаю объект дат, с массивами событий для каждой даты
+const datesObject = getDatesObject(events);
 
 render(tripHeader, createTripInfo(events), `afterbegin`);
 render(tripHeaderCaptions[0], createHeaderMenu(), `afterend`);
@@ -37,14 +63,22 @@ render(tripEvents, createDayList(), `beforeend`);
 
 const dayList = tripEvents.querySelector(`.trip-days`);
 
-render(dayList, createDayItem(), `beforeend`);
 
-const day = dayList.querySelector(`.day`);
+// Номер дня в путешествии
+let dayNumber = 1;
+for (let date in datesObject) {
+  render(dayList, createDayItem(dayNumber, date), `beforeend`);
+  dayNumber++;
 
-render(day, createEventList(), `beforeend`);
+  // Коллекция всех дней
+  const allDays = dayList.querySelectorAll(`.day`);
+  // Последний день в коллекции, чтобы вставить именно в него события
+  const day = allDays[allDays.length - 1];
 
-const eventList = day.querySelector(`.trip-events__list`);
+  render(day, createEventList(), `beforeend`);
+  const eventList = day.querySelector(`.trip-events__list`);
 
-for (const event of events) {
-  render(eventList, createEventItem(event), `beforeend`);
+  for (const event of datesObject[date]) {
+    render(eventList, createEventItem(event), `beforeend`);
+  }
 }

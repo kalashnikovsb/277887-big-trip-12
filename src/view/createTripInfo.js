@@ -1,21 +1,38 @@
 export const createTripInfo = (events) => {
 
-  const getAllDestinations = (events) => {
+  const renderTripInfoTitle = (array) => {
     const destinations = new Set();
-    for (let event of events) {
-      destinations.add(event.destination);
+    array.forEach((item) => {
+      destinations.add(item.destination);
+    });
+    const cities = Array.from(destinations);
+
+    const lastIndex = cities.length - 1;
+    let resultString = ``;
+    for (let i = 0; i < cities.length; i++) {
+      if (i !== lastIndex) {
+        resultString += `${cities[i]} &mdash; `;
+      } else {
+        resultString += `${cities[i]}`;
+      }
     }
-    return Array.from(destinations);
+    return resultString;
   };
 
-  console.log(getAllDestinations(events));
+  const renderCorrectTime = (array) => {
+    const firstDate = array[0].timeStart.toString().slice(4, 10);
+    const lastDate = array[array.length - 1].timeStart.toString().slice(8, 10);
+    return `${firstDate}&nbsp;&mdash;&nbsp;${lastDate}`;
+  };
 
   return (
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
-        <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
+        <h1 class="trip-info__title">
+        ${renderTripInfoTitle(events)}
+        </h1>
 
-        <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
+        <p class="trip-info__dates">${renderCorrectTime(events)}</p>
       </div>
 
       <p class="trip-info__cost">
