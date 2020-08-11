@@ -5,66 +5,62 @@ import {
   ADDITIONAL_OPTIONS,
 } from "../const.js";
 
+const renderEventsGroup = (array) => {
+  return array.map((type) => {
+    type = type.toLowerCase();
+    return (
+      `<div class="event__type-item">
+        <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+        <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
+      </div>`
+    );
+  }).join(``);
+};
+
+const renderDestinationList = (array) => {
+  return array.map((arrayItem) => {
+    return (
+      `<option value="${arrayItem}"></option>`
+    );
+  }).join(``);
+};
+
+const renderAdditionalOptions = (options) => {
+  // Получаю массив названий опций текущего события
+  let keys = options.map((option) => {
+    return option.name;
+  });
+  // По полученному массиву я подсвечиваю (из всех возможных) те опции, которые имеются
+  return ADDITIONAL_OPTIONS.map((currentOption) => {
+    return (
+      `<div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${currentOption.id}-1" type="checkbox" name="event-offer-${currentOption.id}" ${keys.indexOf(currentOption.name) !== -1 ? `checked` : ``}>
+        <label class="event__offer-label" for="event-offer-${currentOption.id}-1">
+          <span class="event__offer-title">${currentOption.name}</span>
+          &plus;
+          &euro;&nbsp;<span class="event__offer-price">${currentOption.price}</span>
+        </label>
+      </div>`
+    );
+  }).join(``);
+};
+
+const renderPhotos = (photos) => {
+  return photos.map((value) => {
+    return `<img class="event__photo" src="${value}" alt="Event photo">`;
+  }).join(``);
+};
+
+const renderCorrectTime = (date) => {
+  const [year, month, day, hours, minutes] = parseTimeToArray(date);
+  return `${String(year).slice(-2)}/${month}/${day} ${hours}:${minutes}`;
+};
 
 export const createEventWithDestination = (event) => {
   const {eventType, destination, destinationInfo, destinationPhotos, timeStart, timeEnd, additionalOptions} = event;
 
   const transferEvents = EVENT_TYPES.slice(0, 7);
   const activityEvents = EVENT_TYPES.slice(7);
-
-  const renderEventsGroup = (array) => {
-    return array.map((type) => {
-      type = type.toLowerCase();
-      return (
-        `<div class="event__type-item">
-          <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-          <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
-        </div>`
-      );
-    }).join(``);
-  };
-
-  const renderDestinationList = (array) => {
-    return array.map((arrayItem) => {
-      return (
-        `<option value="${arrayItem}"></option>`
-      );
-    }).join(``);
-  };
-
-  const renderAdditionalOptions = (options) => {
-    // Тут я получаю массив названий опций
-    let keys = [];
-    for (let option of options) {
-      keys.push(Object.entries(option)[0][1]);
-    }
-    // По полученному массиву я подсвечиваю у данного события те опции, которые у него имеются
-    return ADDITIONAL_OPTIONS.map((obj) => {
-      // "Это нужно тк в разметке атрибусы содержат немного другое значение вместо точных имен опций"
-      const word = obj.name.split(` `).slice(-1);
-      return (
-        `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${word}-1" type="checkbox" name="event-offer-${word}" ${keys.indexOf(obj.name) !== -1 ? `checked` : ``}>
-          <label class="event__offer-label" for="event-offer-${word}-1">
-            <span class="event__offer-title">${obj.name}</span>
-            &plus;
-            &euro;&nbsp;<span class="event__offer-price">${obj.price}</span>
-          </label>
-        </div>`
-      );
-    }).join(``);
-  };
-
-  const renderPhotos = (photos) => {
-    return photos.map((value) => {
-      return `<img class="event__photo" src="${value}" alt="Event photo">`;
-    }).join(``);
-  };
-
-  const renderCorrectTime = (date) => {
-    const [year, month, day, hours, minutes] = parseTimeToArray(date);
-    return `${String(year).slice(-2)}/${month}/${day} ${hours}:${minutes}`;
-  };
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">

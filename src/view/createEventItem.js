@@ -1,23 +1,23 @@
 import {getCorrectPreposition, parseTimeToArray} from "../utils.js";
 
+const renderAdditionalOptions = (options) => {
+  return options.map((option) => {
+    return `
+      <li class="event__offer">
+        <span class="event__offer-title">${option.name}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${option.price}</span>
+     </li>`;
+  }).join(``);
+};
+
+const renderCorrectTime = (date) => {
+  const [year, month, day, hours, minutes] = parseTimeToArray(date);
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
 export const createEventItem = (event) => {
   const {eventType, destination, additionalOptions, timeStart, timeEnd, price} = event;
-
-  const renderAdditionalOptions = (options) => {
-    return options.map((option) => {
-      return `
-        <li class="event__offer">
-          <span class="event__offer-title">${option.name}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${option.price}</span>
-       </li>`;
-    }).join(``);
-  };
-
-  const renderCorrectTime = (date) => {
-    const [year, month, day, hours, minutes] = parseTimeToArray(date);
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
-  };
 
   return (
     `<li class="trip-events__item">

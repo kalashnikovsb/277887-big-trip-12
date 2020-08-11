@@ -1,41 +1,40 @@
-export const createTripInfo = (events) => {
+const renderTripInfoTitle = (events) => {
+  const destinations = new Set();
+  events.forEach((item) => {
+    destinations.add(item.destination);
+  });
+  const cities = Array.from(destinations);
 
-  const renderTripInfoTitle = (array) => {
-    const destinations = new Set();
-    array.forEach((item) => {
-      destinations.add(item.destination);
-    });
-    const cities = Array.from(destinations);
-
-    const lastIndex = cities.length - 1;
-    let resultString = ``;
-    for (let i = 0; i < cities.length; i++) {
-      if (i !== lastIndex) {
-        resultString += `${cities[i]} &mdash; `;
-      } else {
-        resultString += `${cities[i]}`;
-      }
+  const lastIndex = cities.length - 1;
+  let resultString = ``;
+  cities.map((city) => {
+    if (city === cities[lastIndex]) {
+      resultString += `${city}`;
+    } else {
+      resultString += `${city} &mdash; `;
     }
-    return resultString;
-  };
+  });
+  return resultString;
+};
 
-  const renderCorrectTime = (array) => {
-    const firstDate = array[0].timeStart.toString().slice(4, 10);
-    const lastDate = array[array.length - 1].timeStart.toString().slice(8, 10);
-    return `${firstDate}&nbsp;&mdash;&nbsp;${lastDate}`;
-  };
+const renderCorrectTime = (events) => {
+  const firstDate = events[0].timeStart.toString().slice(4, 10);
+  const lastDate = events[events.length - 1].timeStart.toString().slice(8, 10);
+  return `${firstDate}&nbsp;&mdash;&nbsp;${lastDate}`;
+};
 
-  const getFullPrice = (array) => {
-    let result = 0;
-    array.forEach((event) => {
-      result += event.price;
-      event.additionalOptions.forEach((option) => {
-        result += option.price;
-      });
+const getFullPrice = (events) => {
+  let result = 0;
+  events.forEach((event) => {
+    result += event.price;
+    event.additionalOptions.forEach((option) => {
+      result += option.price;
     });
-    return result;
-  };
+  });
+  return result;
+};
 
+export const createTripInfo = (events) => {
   return (
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">

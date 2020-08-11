@@ -1,11 +1,10 @@
+const renderCorrectTime = (string) => {
+  let currentDate = new Date(Date.parse(string));
+  let result = currentDate.toString().slice(4, 10);
+  return result;
+};
+
 export const createDayItem = (dayNumber, date) => {
-
-  const renderCorrectTime = (string) => {
-    let currentDate = new Date(Date.parse(string));
-    let result = currentDate.toString().slice(4, 10);
-    return result;
-  };
-
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
