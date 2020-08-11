@@ -37,14 +37,17 @@ const getDatesObject = (array) => {
   });
   // Прохожу все ключи
   for (let key in dates) {
-    // Для каждого ключа проверяю каждое событие на совпадение даты
-    array.forEach((item) => {
-      const [year, month, day] = parseTimeToArray(item.timeStart);
-      // Если ключ и дата события совпадает, то кладу событие в массив
-      if (key === `${year}-${month}-${day}`) {
-        dates[key].push(item);
-      }
-    });
+    // Проверка чтобы eslint не ругался
+    if (typeof key === `string`) {
+      // Для каждого ключа проверяю каждое событие на совпадение даты
+      array.forEach((item) => {
+        const [year, month, day] = parseTimeToArray(item.timeStart);
+        // Если ключ и дата события совпадает, то кладу событие в массив
+        if (key === `${year}-${month}-${day}`) {
+          dates[key].push(item);
+        }
+      });
+    }
   }
   return dates;
 };
@@ -67,18 +70,20 @@ const dayList = tripEvents.querySelector(`.trip-days`);
 // Номер дня в путешествии
 let dayNumber = 1;
 for (let date in datesObject) {
-  render(dayList, createDayItem(dayNumber, date), `beforeend`);
-  dayNumber++;
+  if (typeof date === `string`) {
+    render(dayList, createDayItem(dayNumber, date), `beforeend`);
+    dayNumber++;
 
-  // Коллекция всех дней
-  const allDays = dayList.querySelectorAll(`.day`);
-  // Последний день в коллекции, чтобы вставить именно в него события
-  const day = allDays[allDays.length - 1];
+    // Коллекция всех дней
+    const allDays = dayList.querySelectorAll(`.day`);
+    // Последний день в коллекции, чтобы вставить именно в него события
+    const day = allDays[allDays.length - 1];
 
-  render(day, createEventList(), `beforeend`);
-  const eventList = day.querySelector(`.trip-events__list`);
+    render(day, createEventList(), `beforeend`);
+    const eventList = day.querySelector(`.trip-events__list`);
 
-  for (const event of datesObject[date]) {
-    render(eventList, createEventItem(event), `beforeend`);
+    for (const event of datesObject[date]) {
+      render(eventList, createEventItem(event), `beforeend`);
+    }
   }
 }
