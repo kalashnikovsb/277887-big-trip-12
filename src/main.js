@@ -37,25 +37,24 @@ const getDatesObject = (array) => {
   });
   // Прохожу все ключи
   for (let key in dates) {
-    // Проверка чтобы eslint не ругался
+    // Чтобы линтер не ругался
     if (typeof key === `string`) {
-      // Для каждого ключа проверяю каждое событие на совпадение даты
-      array.forEach((item) => {
+      // Фильтрую массив событий
+      dates[key] = array.filter((item) => {
         const [year, month, day] = parseTimeToArray(item.timeStart);
-        // Если ключ и дата события совпадает, то кладу событие в массив
-        if (key === `${year}-${month}-${day}`) {
-          dates[key].push(item);
-        }
+        return (key === `${year}-${month}-${day}`);
       });
     }
   }
   return dates;
 };
 
+
 // Генерирую события и сортирую по времени
 const events = new Array(EVENTS_COUNT).fill().map(generateEvent).sort(arraySortByTime);
 // Созаю объект дат, с массивами событий для каждой даты
 const datesObject = getDatesObject(events);
+
 
 render(tripHeader, createTripInfo(events), `afterbegin`);
 render(tripHeaderCaptions[0], createHeaderMenu(), `afterend`);
@@ -67,10 +66,12 @@ render(tripEvents, createDayList(), `beforeend`);
 const dayList = tripEvents.querySelector(`.trip-days`);
 
 
-// Номер дня в путешествии
+// Счетчик дней в путешествии
 let dayNumber = 1;
 for (let date in datesObject) {
+  // Чтобы линтер не ругался
   if (typeof date === `string`) {
+    // Передаю счетчик и дату для отображения блока
     render(dayList, createDayItem(dayNumber, date), `beforeend`);
     dayNumber++;
 

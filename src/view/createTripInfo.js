@@ -25,6 +25,17 @@ export const createTripInfo = (events) => {
     return `${firstDate}&nbsp;&mdash;&nbsp;${lastDate}`;
   };
 
+  const getFullPrice = (array) => {
+    let result = 0;
+    array.forEach((event) => {
+      result += event.price;
+      event.additionalOptions.forEach((option) => {
+        result += option.price;
+      });
+    });
+    return result;
+  };
+
   return (
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
@@ -36,7 +47,7 @@ export const createTripInfo = (events) => {
       </div>
 
       <p class="trip-info__cost">
-        Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
+        Total: &euro;&nbsp;<span class="trip-info__cost-value">${getFullPrice(events)}</span>
       </p>
     </section>`
   );

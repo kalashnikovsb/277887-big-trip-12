@@ -40,10 +40,12 @@ export const createEventWithDestination = (event) => {
     }
     // По полученному массиву я подсвечиваю у данного события те опции, которые у него имеются
     return ADDITIONAL_OPTIONS.map((obj) => {
+      // "Это нужно тк в разметке атрибусы содержат немного другое значение вместо точных имен опций"
+      const word = obj.name.split(` `).slice(-1);
       return (
         `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${obj.name}-1" type="checkbox" name="event-offer-${obj.name}" ${keys.indexOf(obj.name) !== -1 ? `checked` : ``}>
-          <label class="event__offer-label" for="event-offer-${obj.name}-1">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${word}-1" type="checkbox" name="event-offer-${word}" ${keys.indexOf(obj.name) !== -1 ? `checked` : ``}>
+          <label class="event__offer-label" for="event-offer-${word}-1">
             <span class="event__offer-title">${obj.name}</span>
             &plus;
             &euro;&nbsp;<span class="event__offer-price">${obj.price}</span>
