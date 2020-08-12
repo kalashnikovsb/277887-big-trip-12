@@ -1,32 +1,51 @@
-export const createEventItem = () => {
+import {getCorrectPreposition, parseTimeToArray} from "../utils.js";
+
+const renderAdditionalOptions = (options) => {
+  return options.map((option) => {
+    return `
+      <li class="event__offer">
+        <span class="event__offer-title">${option.name}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${option.price}</span>
+     </li>`;
+  }).join(``);
+};
+
+const renderCorrectTime = (date) => {
+  const [year, month, day, hours, minutes] = parseTimeToArray(date);
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
+export const createEventItem = (event) => {
+  const {eventType, destination, additionalOptions, timeStart, timeEnd, price} = event;
+
   return (
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${eventType.toLowerCase()}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">Taxi to Amsterdam</h3>
-
+        <h3 class="event__title">${getCorrectPreposition(eventType)} ${destination}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+            <time class="event__start-time" datetime="
+            ${renderCorrectTime(timeStart)}">${timeStart.toString().slice(16, 21)}
+            </time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+            <time class="event__end-time" datetime="
+            ${renderCorrectTime(timeEnd)}">${timeEnd.toString().slice(16, 21)}
+            </time>
           </p>
-          <p class="event__duration">30M</p>
+          <p class="event__duration">90M</p>
         </div>
 
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">20</span>
+          &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>
 
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          <li class="event__offer">
-            <span class="event__offer-title">Order Uber</span>
-            &plus;
-            &euro;&nbsp;<span class="event__offer-price">20</span>
-           </li>
+          ${renderAdditionalOptions(additionalOptions)}
         </ul>
 
         <button class="event__rollup-btn" type="button">
