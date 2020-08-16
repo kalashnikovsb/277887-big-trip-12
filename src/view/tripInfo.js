@@ -1,3 +1,5 @@
+import {createElement} from "../utils.js";
+
 const renderTripInfoTitle = (events) => {
   const destinations = new Set();
   events.forEach((item) => {
@@ -34,7 +36,7 @@ const getFullPrice = (events) => {
   return result;
 };
 
-export const createTripInfo = (events) => {
+const createTripInfoTemplate = (events) => {
   return (
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
@@ -51,3 +53,22 @@ export const createTripInfo = (events) => {
     </section>`
   );
 };
+
+export default class tripInfo {
+  constructor(events) {
+    this._events = events;
+    this._element = null;
+  }
+  getTemplate() {
+    return createTripInfoTemplate(this._events);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

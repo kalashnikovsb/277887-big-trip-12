@@ -1,4 +1,4 @@
-import {getCorrectPreposition, parseTimeToArray} from "../utils.js";
+import {getCorrectPreposition, parseTimeToArray, createElement} from "../utils.js";
 import {
   EVENT_TYPES,
   CITIES,
@@ -56,7 +56,7 @@ const renderCorrectTime = (date) => {
   return `${String(year).slice(-2)}/${month}/${day} ${hours}:${minutes}`;
 };
 
-export const createEventWithDestination = (event) => {
+const createEventWithDestinationTemplate = (event) => {
   const {eventType, destination, destinationInfo, destinationPhotos, timeStart, timeEnd, additionalOptions} = event;
 
   const transferEvents = EVENT_TYPES.slice(0, 7);
@@ -140,3 +140,22 @@ export const createEventWithDestination = (event) => {
     </form>`
   );
 };
+
+export default class eventWithDestination {
+  constructor(event) {
+    this._event = event;
+    this._element = null;
+  }
+  getTemplate() {
+    return createEventWithDestinationTemplate(this._event);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}
