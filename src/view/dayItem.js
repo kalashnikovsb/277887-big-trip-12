@@ -17,7 +17,7 @@ const createDayItemTemplate = (dayNumber, date) => {
   );
 };
 
-export default class dayItem {
+export default class DayItem {
   constructor(dayNumber, date) {
     this._dayNumber = dayNumber;
     this._date = date;

@@ -54,7 +54,7 @@ const createTripInfoTemplate = (events) => {
   );
 };
 
-export default class tripInfo {
+export default class TripInfo {
   constructor(events) {
     this._events = events;
     this._element = null;

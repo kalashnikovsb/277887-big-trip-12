@@ -9,7 +9,7 @@ const createHeaderMenuTemplate = () => {
   );
 };
 
-export default class headerMenu {
+export default class HeaderMenu {
   constructor() {
     this._element = null;
   }

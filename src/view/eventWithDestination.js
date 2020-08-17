@@ -141,7 +141,7 @@ const createEventWithDestinationTemplate = (event) => {
   );
 };
 
-export default class eventWithDestination {
+export default class EventWithDestination {
   constructor(event) {
     this._event = event;
     this._element = null;

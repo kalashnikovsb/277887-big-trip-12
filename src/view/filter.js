@@ -23,7 +23,7 @@ const createTimeFilterTemplate = () => {
   );
 };
 
-export default class filter {
+export default class Filter {
   constructor() {
     this._element = null;
   }

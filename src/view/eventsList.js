@@ -6,7 +6,7 @@ const createEventsListTemplate = () => {
   );
 };
 
-export default class eventsList {
+export default class EventsList {
   constructor() {
     this._element = null;
   }

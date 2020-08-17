@@ -56,7 +56,7 @@ const createEventItemTemplate = (event) => {
   );
 };
 
-export default class eventItem {
+export default class EventItem {
   constructor(event) {
     this._event = event;
     this._element = null;

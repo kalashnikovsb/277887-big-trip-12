@@ -1,14 +1,15 @@
 import {EVENTS_COUNT} from "./const.js";
-import {tripInfo} from "./view/tripInfo.js";
-import {headerMenu} from "./view/headerMenu.js";
-import {filter} from "./view/filter.js";
-import {sorting} from "./view/sorting.js";
-import {eventWithDestination} from "./view/eventWithDestination.js";
-import {daysList} from "./view/daysList.js";
-import {dayItem} from "./view/dayItem.js";
-import {eventsList} from "./view/eventsList.js";
-import {eventItem} from "./view/eventItem.js";
-import {parseTimeToArray} from "./utils.js";
+import TripInfo from "./view/TripInfo.js";
+import HeaderMenu from "./view/HeaderMenu.js";
+import Filter from "./view/Filter.js";
+import Sorting from "./view/Sorting.js";
+import EventWithDestination from "./view/EventWithDestination.js";
+import DaysList from "./view/DaysList.js";
+import DayItem from "./view/DayItem.js";
+import EventsList from "./view/EventsList.js";
+import EventItem from "./view/EventItem.js";
+import EventEdit from "./view/EventEdit.js";
+import {parseTimeToArray, renderPosition, renderElement} from "./utils.js";
 import {generateEvent} from "./mock/generateEvent.js";
 
 const tripHeader = document.querySelector(`.trip-main`);
@@ -16,11 +17,7 @@ const tripHeaderMenu = tripHeader.querySelector(`.trip-controls`);
 const tripHeaderCaptions = tripHeaderMenu.querySelectorAll(`.trip-controls h2`);
 const tripEvents = document.querySelector(`.trip-events`);
 
-const render = (container, template, position) => {
-  container.insertAdjacentHTML(position, template);
-};
-
-const arraySortByTime = (first, second) => {
+const eventsSortByTime = (first, second) => {
   const firstTime = first.timeStart;
   const secondValue = second.timeStart;
   return firstTime - secondValue;
@@ -51,19 +48,19 @@ const getObjectDatesList = (arrayOfEvents) => {
 
 
 // Генерирую события и сортирую по времени
-const events = new Array(EVENTS_COUNT).fill().map(generateEvent).sort(arraySortByTime);
+const events = new Array(EVENTS_COUNT).fill().map(generateEvent).sort(eventsSortByTime);
 // Созаю объект дат, с массивами событий для каждой даты
 const objectDates = getObjectDatesList(events);
 
 
-render(tripHeader, createTripInfo(events), `afterbegin`);
-render(tripHeaderCaptions[0], createHeaderMenu(), `afterend`);
-render(tripHeaderCaptions[1], createTimeFilter(), `afterend`);
-render(tripEvents, createSorting(), `beforeend`);
-render(tripEvents, createEventWithDestination(events[0]), `beforeend`);
-render(tripEvents, createDayList(), `beforeend`);
+renderElement(tripHeader, new TripInfo(events).getElement(), renderPosition.AFTERBEGIN);
+renderElement(tripHeaderCaptions[0], new HeaderMenu().getElement(), renderPosition.AFTEREND);
+renderElement(tripHeaderCaptions[1], new Filter().getElement(), renderPosition.AFTEREND);
+renderElement(tripEvents, new Sorting().getElement(), renderPosition.BEFOREEND);
+// renderElement(tripEvents, new EventWithDestination(events[0]).getElement(), renderPosition.BEFOREEND);
+renderElement(tripEvents, new DaysList().getElement(), renderPosition.BEFOREEND);
 
-const dayList = tripEvents.querySelector(`.trip-days`);
+const daysList = tripEvents.querySelector(`.trip-days`);
 
 
 // Счетчик дней в путешествии
@@ -71,18 +68,34 @@ let dayNumber = 1;
 const objectDateKeys = Object.keys(objectDates);
 for (let key of objectDateKeys) {
   // Передаю счетчик и дату для отображения блока
-  render(dayList, createDayItem(dayNumber, key), `beforeend`);
+  renderElement(daysList, new DayItem(dayNumber, key).getElement(), renderPosition.BEFOREEND);
   dayNumber++;
 
   // Коллекция всех дней
-  const allDays = dayList.querySelectorAll(`.day`);
+  const allDays = daysList.querySelectorAll(`.day`);
   // Последний день в коллекции, чтобы вставить именно в него события
   const day = allDays[allDays.length - 1];
 
-  render(day, createEventList(), `beforeend`);
-  const eventList = day.querySelector(`.trip-events__list`);
+  renderElement(day, new EventsList().getElement(), renderPosition.BEFOREEND);
+  const eventsList = day.querySelector(`.trip-events__list`);
 
   for (const event of objectDates[key]) {
-    render(eventList, createEventItem(event), `beforeend`);
+    const currentEvent = new EventItem(event).getElement();
+    const openButton = currentEvent.querySelector(`.event__rollup-btn`);
+
+    const currentEventEdit = new EventEdit(event).getElement();
+    const closeButton = currentEventEdit.querySelector(`.event__rollup-btn`);
+
+    renderElement(eventsList, currentEvent, renderPosition.BEFOREEND);
+
+    let isEdit = false;
+    openButton.addEventListener(`click`, () => {
+      const oldElement = eventsList.replaceChild(currentEventEdit, currentEvent);
+      oldElement.remove();
+      oldElement.removeElement();
+      isEdit = true;
+    });
+
+    // renderElement(eventsList, new EventEdit(event).getElement(), renderPosition.BEFOREEND);
   }
 }
