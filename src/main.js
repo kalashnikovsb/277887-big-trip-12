@@ -3,7 +3,7 @@ import TripInfo from "./view/TripInfo.js";
 import HeaderMenu from "./view/HeaderMenu.js";
 import Filter from "./view/Filter.js";
 import Sorting from "./view/Sorting.js";
-import EventWithDestination from "./view/EventWithDestination.js";
+// import EventWithDestination from "./view/EventWithDestination.js";
 import DaysList from "./view/DaysList.js";
 import DayItem from "./view/DayItem.js";
 import EventsList from "./view/EventsList.js";
@@ -80,29 +80,26 @@ for (let key of objectDateKeys) {
   const eventsList = day.querySelector(`.trip-events__list`);
 
   for (const event of objectDates[key]) {
-    const currentEvent = new EventItem(event).getElement();
-    const openButton = currentEvent.querySelector(`.event__rollup-btn`);
-    const currentEventEdit = new EventEdit(event).getElement();
-    const closeButton = currentEventEdit.querySelector(`.event__rollup-btn`);
+    // Создаю события сразу в 2 видах - обычном и редактируемом. Так же нахожу кнопки открыть/закрыть
+    const usualEvent = new EventItem(event).getElement();
+    const openButton = usualEvent.querySelector(`.event__rollup-btn`);
+    const editingEvent = new EventEdit(event).getElement();
+    const closeButton = editingEvent.querySelector(`.event__rollup-btn`);
+    const editForm = editingEvent.querySelector(`.event--edit`);
 
-    renderElement(eventsList, currentEvent, renderPosition.BEFOREEND);
+    renderElement(eventsList, usualEvent, renderPosition.BEFOREEND);
 
-    let isEdit = false;
     openButton.addEventListener(`click`, () => {
-      const oldElement = eventsList.replaceChild(currentEventEdit, currentEvent);
-      oldElement.remove();
-      oldElement.removeElement();
-      console.log(oldElement);
-      isEdit = true;
+      eventsList.replaceChild(editingEvent, usualEvent);
     });
 
     closeButton.addEventListener(`click`, () => {
-      const oldElement = eventsList.replaceChild(currentEvent, currentEventEdit);
-      oldElement.remove();
-      console.log(oldElement);
-      isEdit = false;
+      eventsList.replaceChild(usualEvent, editingEvent);
     });
 
-    // renderElement(eventsList, new EventEdit(event).getElement(), renderPosition.BEFOREEND);
+    editForm.addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+      eventsList.replaceChild(usualEvent, editingEvent);
+    });
   }
 }

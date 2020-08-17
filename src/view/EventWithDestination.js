@@ -57,7 +57,7 @@ const renderCorrectTime = (date) => {
 };
 
 const createEventWithDestinationTemplate = (event) => {
-  const {eventType, destination, destinationInfo, destinationPhotos, timeStart, timeEnd, additionalOptions} = event;
+  const {eventType, destination, destinationInfo, destinationPhotos, timeStart, timeEnd, additionalOptions, price} = event;
 
   const transferEvents = EVENT_TYPES.slice(0, 7);
   const activityEvents = EVENT_TYPES.slice(7);
@@ -112,7 +112,7 @@ const createEventWithDestinationTemplate = (event) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
