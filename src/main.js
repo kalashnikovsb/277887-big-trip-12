@@ -82,7 +82,6 @@ for (let key of objectDateKeys) {
   for (const event of objectDates[key]) {
     const currentEvent = new EventItem(event).getElement();
     const openButton = currentEvent.querySelector(`.event__rollup-btn`);
-
     const currentEventEdit = new EventEdit(event).getElement();
     const closeButton = currentEventEdit.querySelector(`.event__rollup-btn`);
 
@@ -93,7 +92,15 @@ for (let key of objectDateKeys) {
       const oldElement = eventsList.replaceChild(currentEventEdit, currentEvent);
       oldElement.remove();
       oldElement.removeElement();
+      console.log(oldElement);
       isEdit = true;
+    });
+
+    closeButton.addEventListener(`click`, () => {
+      const oldElement = eventsList.replaceChild(currentEvent, currentEventEdit);
+      oldElement.remove();
+      console.log(oldElement);
+      isEdit = false;
     });
 
     // renderElement(eventsList, new EventEdit(event).getElement(), renderPosition.BEFOREEND);
