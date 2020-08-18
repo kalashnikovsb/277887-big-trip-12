@@ -71,18 +71,29 @@ for (let key of objectDateKeys) {
     const editForm = editingEvent.querySelector(`.event--edit`);
 
     renderElement(eventsList, usualEvent, renderPosition.BEFOREEND);
+    let isEdit = false;
 
     openButton.addEventListener(`click`, () => {
       eventsList.replaceChild(editingEvent, usualEvent);
+      isEdit = true;
     });
 
     closeButton.addEventListener(`click`, () => {
       eventsList.replaceChild(usualEvent, editingEvent);
+      isEdit = false;
     });
 
     editForm.addEventListener(`submit`, (evt) => {
       evt.preventDefault();
       eventsList.replaceChild(usualEvent, editingEvent);
+      isEdit = false;
+    });
+
+    document.addEventListener(`keydown`, (evt) => {
+      if (evt.keyCode === 27 && isEdit) {
+        eventsList.replaceChild(usualEvent, editingEvent);
+        isEdit = false;
+      }
     });
   }
 }
