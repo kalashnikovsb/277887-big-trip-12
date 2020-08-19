@@ -13,7 +13,7 @@ import {generateEvent} from "./mock/generateEvent.js";
 
 const tripHeader = document.querySelector(`.trip-main`);
 const tripHeaderMenu = tripHeader.querySelector(`.trip-controls`);
-const tripHeaderCaptions = tripHeaderMenu.querySelectorAll(`.trip-controls h2`) ;
+const tripHeaderCaptions = tripHeaderMenu.querySelectorAll(`.trip-controls h2`);
 const tripEvents = document.querySelector(`.trip-events`);
 
 const eventsSortByTime = (first, second) => {
