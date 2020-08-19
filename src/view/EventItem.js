@@ -1,4 +1,4 @@
-import {getCorrectPreposition, parseTimeToArray} from "../utils.js";
+import {getCorrectPreposition, parseTimeToArray, createElement} from "../utils.js";
 
 const renderAdditionalOptions = (options) => {
   return options.map((option) => {
@@ -16,7 +16,7 @@ const renderCorrectTime = (date) => {
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
 
-export const createEventItem = (event) => {
+const createEventItemTemplate = (event) => {
   const {eventType, destination, additionalOptions, timeStart, timeEnd, price} = event;
 
   return (
@@ -55,3 +55,22 @@ export const createEventItem = (event) => {
     </li>`
   );
 };
+
+export default class EventItem {
+  constructor(event) {
+    this._event = event;
+    this._element = null;
+  }
+  getTemplate() {
+    return createEventItemTemplate(this._event);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

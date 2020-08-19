@@ -1,4 +1,4 @@
-import {getCorrectPreposition, parseTimeToArray} from "../utils.js";
+import {getCorrectPreposition, parseTimeToArray, createElement} from "../utils.js";
 import {
   EVENT_TYPES,
   CITIES,
@@ -56,8 +56,8 @@ const renderCorrectTime = (date) => {
   return `${String(year).slice(-2)}/${month}/${day} ${hours}:${minutes}`;
 };
 
-export const createEventWithDestination = (event) => {
-  const {eventType, destination, destinationInfo, destinationPhotos, timeStart, timeEnd, additionalOptions} = event;
+const createEventWithDestinationTemplate = (event) => {
+  const {eventType, destination, destinationInfo, destinationPhotos, timeStart, timeEnd, additionalOptions, price} = event;
 
   const transferEvents = EVENT_TYPES.slice(0, 7);
   const activityEvents = EVENT_TYPES.slice(7);
@@ -112,7 +112,7 @@ export const createEventWithDestination = (event) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -140,3 +140,22 @@ export const createEventWithDestination = (event) => {
     </form>`
   );
 };
+
+export default class EventWithDestination {
+  constructor(event) {
+    this._event = event;
+    this._element = null;
+  }
+  getTemplate() {
+    return createEventWithDestinationTemplate(this._event);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

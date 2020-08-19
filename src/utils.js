@@ -46,4 +46,37 @@ const parseTimeToArray = (date) => {
   return [year, month, day, hours, minutes];
 };
 
-export {getRandomInteger, getRandomArrayElement, getCorrectPreposition, getNiceFormat, parseTimeToArray};
+// Возможные позиции для вставки DOM-элемента
+const renderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  AFTEREND: `afterend`,
+  BEFOREBEGIN: `beforebegin`,
+  BEFOREEND: `beforeend`,
+};
+
+// Отображение DOM-элемента
+const renderElement = (container, element, position) => {
+  switch (position) {
+    case renderPosition.BEFOREBEGIN:
+      container.before(element);
+      break;
+    case renderPosition.BEFOREEND:
+      container.append(element);
+      break;
+    case renderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case renderPosition.AFTEREND:
+      container.after(element);
+      break;
+  }
+};
+
+// Создание DOM-элемента на основе шаблона
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+  return newElement.firstChild;
+};
+
+export {getRandomInteger, getRandomArrayElement, getCorrectPreposition, getNiceFormat, parseTimeToArray, renderPosition, renderElement, createElement};
