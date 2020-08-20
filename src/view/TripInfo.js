@@ -20,9 +20,14 @@ const renderTripInfoTitle = (events) => {
 };
 
 const renderCorrectTime = (events) => {
-  const firstDate = events[0].timeStart.toString().slice(4, 10);
-  const lastDate = events[events.length - 1].timeStart.toString().slice(8, 10);
-  return `${firstDate}&nbsp;&mdash;&nbsp;${lastDate}`;
+  // Проверяю есть ли вобще события events, если нет то вернуть пустую строку
+  if (events.length) {
+    const firstDate = events[0].timeStart.toString().slice(4, 10);
+    const lastDate = events[events.length - 1].timeStart.toString().slice(8, 10);
+    return `${firstDate}&nbsp;&mdash;&nbsp;${lastDate}`;
+  } else {
+    return ``;
+  }
 };
 
 const getFullPrice = (events) => {

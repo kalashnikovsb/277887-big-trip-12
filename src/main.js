@@ -8,20 +8,19 @@ import DayItem from "./view/DayItem.js";
 import EventsList from "./view/EventsList.js";
 import EventItem from "./view/EventItem.js";
 import EventEdit from "./view/EventEdit.js";
+import NoEvents from "./view/NoEvents.js";
 import {parseTimeToArray, renderPosition, renderElement} from "./utils.js";
 import {generateEvent} from "./mock/generateEvent.js";
 
-const tripHeader = document.querySelector(`.trip-main`);
-const tripHeaderMenu = tripHeader.querySelector(`.trip-controls`);
-const tripHeaderCaptions = tripHeaderMenu.querySelectorAll(`.trip-controls h2`);
-const tripEvents = document.querySelector(`.trip-events`);
-
+// Функция сортировки событий по времени
 const eventsSortByTime = (first, second) => {
   const firstTime = first.timeStart;
   const secondValue = second.timeStart;
   return firstTime - secondValue;
 };
 
+// Функция получания массива у которого каждый ключ это день в виде строки,
+// а значение это массив событий этого дня
 const getObjectDatesList = (arrayOfEvents) => {
   let dates = {};
   arrayOfEvents.forEach((item) => {
@@ -29,30 +28,49 @@ const getObjectDatesList = (arrayOfEvents) => {
     const key = `${year}-${month}-${day}`;
     dates[key] = [];
   });
-  for (let key in dates) {
-    if (typeof key === `string`) {
-      dates[key] = arrayOfEvents.filter((item) => {
-        const [year, month, day] = parseTimeToArray(item.timeStart);
-        return (key === `${year}-${month}-${day}`);
-      });
-    }
-  }
+  Object.keys(dates).map((key) => {
+    dates[key] = arrayOfEvents.filter((item) => {
+      const [year, month, day] = parseTimeToArray(item.timeStart);
+      return (key === `${year}-${month}-${day}`);
+    });
+  });
   return dates;
 };
 
+const tripHeader = document.querySelector(`.trip-main`);
+const tripHeaderMenu = tripHeader.querySelector(`.trip-controls`);
+const tripHeaderCaptions = tripHeaderMenu.querySelectorAll(`.trip-controls h2`);
+const tripEvents = document.querySelector(`.trip-events`);
+
+// Получаю массив событий и сразу сортирую его по времени
 const events = new Array(EVENTS_COUNT).fill().map(generateEvent).sort(eventsSortByTime);
-const objectDates = getObjectDatesList(events);
 
 renderElement(tripHeader, new TripInfo(events).getElement(), renderPosition.AFTERBEGIN);
 renderElement(tripHeaderCaptions[0], new HeaderMenu().getElement(), renderPosition.AFTEREND);
 renderElement(tripHeaderCaptions[1], new Filter().getElement(), renderPosition.AFTEREND);
-renderElement(tripEvents, new Sorting().getElement(), renderPosition.BEFOREEND);
 renderElement(tripEvents, new DaysList().getElement(), renderPosition.BEFOREEND);
+
+// Получаю массив у которого каждый ключ это день в виде строки,
+// а значение это массив событий этого дня
+const objectDates = getObjectDatesList(events);
 
 const daysList = tripEvents.querySelector(`.trip-days`);
 
+// Если события есть, то отображаю сортировку
+if (events.length) {
+  renderElement(tripEvents, new Sorting().getElement(), renderPosition.BEFOREEND);
+}
+
+// Если событий нет, то отображаю приглашение добавить событие
+if (!events.length) {
+  renderElement(tripEvents, new NoEvents().getElement(), renderPosition.BEFOREEND);
+}
+
+// Счетчик дней путешествия, начинается всегда с 1
 let dayNumber = 1;
 const objectDateKeys = Object.keys(objectDates);
+
+// Для каждого дня отображаю внутренние блоки внутри
 for (let key of objectDateKeys) {
   renderElement(daysList, new DayItem(dayNumber, key).getElement(), renderPosition.BEFOREEND);
   dayNumber++;
@@ -64,35 +82,36 @@ for (let key of objectDateKeys) {
   const eventsList = day.querySelector(`.trip-events__list`);
 
   for (const event of objectDates[key]) {
-    const usualEvent = new EventItem(event).getElement();
-    const openButton = usualEvent.querySelector(`.event__rollup-btn`);
+    const regularEvent = new EventItem(event).getElement();
+    const openButton = regularEvent.querySelector(`.event__rollup-btn`);
     const editingEvent = new EventEdit(event).getElement();
     const closeButton = editingEvent.querySelector(`.event__rollup-btn`);
     const editForm = editingEvent.querySelector(`.event--edit`);
 
-    renderElement(eventsList, usualEvent, renderPosition.BEFOREEND);
+    renderElement(eventsList, regularEvent, renderPosition.BEFOREEND);
+
+    // По умолчанию все события появляются в обычном виде
     let isEdit = false;
 
-    openButton.addEventListener(`click`, () => {
-      eventsList.replaceChild(editingEvent, usualEvent);
+    // Функция открытия режима редактирования события
+    const openEditingMode = () => {
+      eventsList.replaceChild(editingEvent, regularEvent);
       isEdit = true;
-    });
+    };
 
-    closeButton.addEventListener(`click`, () => {
-      eventsList.replaceChild(usualEvent, editingEvent);
+    // Функция закрытия режима редактирования события
+    const closeEditingMode = () => {
+      eventsList.replaceChild(regularEvent, editingEvent);
       isEdit = false;
-    });
+    };
 
-    editForm.addEventListener(`submit`, (evt) => {
-      evt.preventDefault();
-      eventsList.replaceChild(usualEvent, editingEvent);
-      isEdit = false;
-    });
-
+    // Навешиваю обработчики
+    openButton.addEventListener(`click`, openEditingMode);
+    closeButton.addEventListener(`click`, closeEditingMode);
+    editForm.addEventListener(`submit`, closeEditingMode);
     document.addEventListener(`keydown`, (evt) => {
       if (evt.keyCode === 27 && isEdit) {
-        eventsList.replaceChild(usualEvent, editingEvent);
-        isEdit = false;
+        closeEditingMode();
       }
     });
   }
