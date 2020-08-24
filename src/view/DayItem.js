@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import Abstract from "./Abstract.js";
 
 const renderCorrectTime = (string) => {
   let currentDate = new Date(Date.parse(string));
@@ -17,22 +17,13 @@ const createDayItemTemplate = (dayNumber, date) => {
   );
 };
 
-export default class DayItem {
+export default class DayItem extends Abstract {
   constructor(dayNumber, date) {
+    super();
     this._dayNumber = dayNumber;
     this._date = date;
-    this._element = null;
   }
   getTemplate() {
     return createDayItemTemplate(this._dayNumber, this._date);
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,4 +1,5 @@
-import {getCorrectPreposition, parseTimeToArray, createElement} from "../utils.js";
+import Abstract from "./Abstract.js";
+import {parseTimeToArray, getCorrectPreposition} from "../utils.js";
 import {
   EVENT_TYPES,
   CITIES,
@@ -139,21 +140,12 @@ const creaveEventEditTemplate = (event) => {
   );
 };
 
-export default class EventEdit {
+export default class EventEdit extends Abstract {
   constructor(event) {
+    super();
     this._event = event;
-    this._element = null;
   }
   getTemplate() {
     return creaveEventEditTemplate(this._event);
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }
