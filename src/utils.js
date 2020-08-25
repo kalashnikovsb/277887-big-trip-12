@@ -1,3 +1,5 @@
+import Abstract from "./view/Abstract.js";
+
 const getRandomInteger = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -55,7 +57,15 @@ const renderPosition = {
 };
 
 // Отображение DOM-элемента
-const renderElement = (container, element, position) => {
+const render = (container, element, position) => {
+  if (container instanceof Abstract) {
+    container = container.getElement();
+  }
+
+  if (element instanceof Abstract) {
+    element = element.getElement();
+  }
+
   switch (position) {
     case renderPosition.BEFOREBEGIN:
       container.before(element);
@@ -72,6 +82,21 @@ const renderElement = (container, element, position) => {
   }
 };
 
+const replace = (newChild, oldChild) => {
+  if (oldChild instanceof Abstract) {
+    oldChild = oldChild.getElement();
+  }
+  if (newChild instanceof Abstract) {
+    newChild = newChild.getElement();
+  }
+  const parent = oldChild.parentElement;
+
+  if (parent === null || oldChild === null || newChild === null) {
+    throw new Error(`Can't replace unexisting elements`);
+  }
+  parent.replaceChild(newChild, oldChild);
+};
+
 // Создание DOM-элемента на основе шаблона
 const createElement = (template) => {
   const newElement = document.createElement(`div`);
@@ -79,4 +104,4 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
-export {getRandomInteger, getRandomArrayElement, getCorrectPreposition, getNiceFormat, parseTimeToArray, renderPosition, renderElement, createElement};
+export {getRandomInteger, getRandomArrayElement, getCorrectPreposition, getNiceFormat, parseTimeToArray, renderPosition, render, createElement, replace};

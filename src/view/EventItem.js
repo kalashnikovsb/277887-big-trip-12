@@ -61,8 +61,19 @@ export default class EventItem extends Abstract {
   constructor(event) {
     super();
     this._event = event;
+    this._openClickHandler = this._openClickHandler.bind(this);
   }
+
   getTemplate() {
     return createEventItemTemplate(this._event);
+  }
+
+  _openClickHandler() {
+    this._callback.click();
+  }
+
+  setOpenClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._openClickHandler);
   }
 }

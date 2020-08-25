@@ -144,8 +144,29 @@ export default class EventEdit extends Abstract {
   constructor(event) {
     super();
     this._event = event;
+    this._closeClickHandler = this._closeClickHandler.bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
+
   getTemplate() {
     return creaveEventEditTemplate(this._event);
+  }
+
+  _closeClickHandler() {
+    this._callback.click();
+  }
+
+  setCloseClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._closeClickHandler);
+  }
+
+  _formSubmitHandler() {
+    this._callback.submit();
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.submit = callback;
+    this.getElement().querySelector(`.event--edit`).addEventListener(`submit`, this._formSubmitHandler);
   }
 }
