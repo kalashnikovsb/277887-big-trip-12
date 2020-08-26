@@ -9,7 +9,8 @@ import EventsList from "./view/EventsList.js";
 import EventItem from "./view/EventItem.js";
 import EventEdit from "./view/EventEdit.js";
 import NoEvents from "./view/NoEvents.js";
-import {parseTimeToArray, renderPosition, render, replace} from "./utils.js";
+import {parseTimeToArray} from "./utils/events.js";
+import {renderPosition, render, replace} from "./utils/render.js";
 import {generateEvent} from "./mock/generateEvent.js";
 
 // Функция сортировки событий по времени

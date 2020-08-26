@@ -1,5 +1,5 @@
 import Abstract from "./Abstract.js";
-import {getCorrectPreposition, parseTimeToArray} from "../utils.js";
+import {getCorrectPreposition, parseTimeToArray} from "../utils/events.js";
 
 const renderAdditionalOptions = (options) => {
   return options.map((option) => {

@@ -1,5 +1,5 @@
 import Abstract from "./Abstract.js";
-import {parseTimeToArray, getCorrectPreposition} from "../utils.js";
+import {getCorrectPreposition, parseTimeToArray} from "../utils/events.js";
 import {
   EVENT_TYPES,
   CITIES,
