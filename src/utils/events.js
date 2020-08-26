@@ -47,7 +47,7 @@ const eventsSortByTime = (first, second) => {
   return firstTime - secondValue;
 };
 
-// Функция получания массива у которого каждый ключ это день в виде строки,
+// Функция получения массива у которого каждый ключ это день в виде строки,
 // а значение это массив событий этого дня
 const getObjectDatesList = (arrayOfEvents) => {
   let dates = {};
