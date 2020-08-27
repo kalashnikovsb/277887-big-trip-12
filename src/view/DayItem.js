@@ -1,12 +1,15 @@
 import Abstract from "./Abstract.js";
 
 const renderCorrectTime = (string) => {
+  if (!string) {
+    return ``;
+  }
   let currentDate = new Date(Date.parse(string));
   let result = currentDate.toString().slice(4, 10);
   return result;
 };
 
-const createDayItemTemplate = (dayNumber, date) => {
+const createDayItemTemplate = (dayNumber = ``, date = ``) => {
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">

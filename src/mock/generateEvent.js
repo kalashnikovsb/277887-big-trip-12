@@ -44,7 +44,8 @@ const generateTime = () => {
 
 export const generateEvent = () => {
   const timeStart = generateTime();
-  const timeEnd = new Date(timeStart.getTime() + (90 * 60 * 1000));
+  // Прибавляю рандомное количество времени от 1 часа до 10 часов
+  const timeEnd = new Date(timeStart.getTime() + getRandomInteger(3600000, 36000000));
 
   return {
     eventType: getRandomArrayElement(EVENT_TYPES),

@@ -65,4 +65,14 @@ const getObjectDatesList = (arrayOfEvents) => {
   return dates;
 };
 
-export {getCorrectPreposition, getNiceFormat, parseTimeToArray, createElement, eventsSortByTime, getObjectDatesList};
+const sortTimeUp = (eventA, eventB) => {
+  const durationA = eventA.timeEnd.getTime() - eventA.timeStart.getTime();
+  const durationB = eventB.timeEnd.getTime() - eventB.timeStart.getTime();
+  return durationB - durationA;
+};
+
+const sortPriceUp = (eventA, eventB) => {
+  return eventB.price - eventA.price;
+};
+
+export {getCorrectPreposition, getNiceFormat, parseTimeToArray, createElement, eventsSortByTime, getObjectDatesList, sortTimeUp, sortPriceUp};
