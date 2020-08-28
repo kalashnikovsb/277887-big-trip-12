@@ -68,22 +68,19 @@ export default class Trip {
       const regularEvent = new EventItem(event);
       const editingEvent = new EventEdit(event);
       render(eventsList, regularEvent, renderPosition.BEFOREEND);
-      let isEdit = false;
 
       const replaceRegularToEdit = () => {
         replace(editingEvent, regularEvent);
-        isEdit = true;
         document.addEventListener(`keydown`, escKeyPress);
       };
 
       const replaceEditToRegular = () => {
         replace(regularEvent, editingEvent);
-        isEdit = false;
         document.removeEventListener(`keydown`, escKeyPress);
       };
 
       const escKeyPress = (evt) => {
-        if (evt.keyCode === ESC_KEYCODE && isEdit) {
+        if (evt.keyCode === ESC_KEYCODE) {
           replaceEditToRegular();
         }
       };
