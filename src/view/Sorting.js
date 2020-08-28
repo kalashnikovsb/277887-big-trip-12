@@ -57,4 +57,13 @@ export default class Sorting extends Abstract {
     this._callback.sortTypeChange = callback;
     this.getElement().addEventListener(`click`, this._sortTypeChangeHandler);
   }
+
+  hideShowDayText(boolean) {
+    const dayBlock = this.getElement().querySelector(`.trip-sort__item--day`);
+    if (boolean) {
+      dayBlock.textContent = `Day`;
+    } else {
+      dayBlock.textContent = ``;
+    }
+  }
 }

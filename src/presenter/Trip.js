@@ -6,7 +6,7 @@ import EventsList from "../view/EventsList.js";
 import EventItem from "../view/EventItem.js";
 import EventEdit from "../view/EventEdit.js";
 import NoEvents from "../view/NoEvents.js";
-import {SORT_TYPE} from "../const.js";
+import {SORT_TYPE, ESC_KEYCODE} from "../const.js";
 import {getObjectDatesList, sortTimeUp, sortPriceUp} from "../utils/events.js";
 import {renderPosition, render, replace} from "../utils/render.js";
 
@@ -19,7 +19,6 @@ export default class Trip {
     this._sorting = new Sorting();
     this._noEvents = new NoEvents();
     this._daysList = new DaysList();
-    this._daysCounter = 1;
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
@@ -34,21 +33,20 @@ export default class Trip {
     this._objectDates = getObjectDatesList(this._events);
     // Получаю уникальные даты событий
     this._objectDateKeys = Object.keys(this._objectDates);
+
     if (this._events.length) {
       this._renderSorting();
+      render(this._tripEvents, this._daysList, renderPosition.BEFOREEND);
+      this._renderDaysEventsNormally();
     } else {
       render(this._tripEvents, this._noEvents, renderPosition.BEFOREEND);
     }
-    render(this._tripEvents, this._daysList, renderPosition.BEFOREEND);
-    this._renderDaysEventsNormally();
   }
 
 
-  _renderDay(currentDate) {
-    const dayItem = new DayItem(this._daysCounter, currentDate);
+  _renderDay(currentDate, daysCounter) {
+    const dayItem = new DayItem(daysCounter, currentDate);
     render(this._daysList, dayItem, renderPosition.BEFOREEND);
-
-    this._daysCounter++;
 
     const allDays = this._daysList.getElement().querySelectorAll(`.day`);
     const day = allDays[allDays.length - 1];
@@ -71,23 +69,28 @@ export default class Trip {
       const editingEvent = new EventEdit(event);
       render(eventsList, regularEvent, renderPosition.BEFOREEND);
       let isEdit = false;
+
       const replaceRegularToEdit = () => {
         replace(editingEvent, regularEvent);
         isEdit = true;
+        document.addEventListener(`keydown`, escKeyPress);
       };
+
       const replaceEditToRegular = () => {
         replace(regularEvent, editingEvent);
         isEdit = false;
+        document.removeEventListener(`keydown`, escKeyPress);
       };
-      // Обработчики открытия, закрытия, отправки формы и нажатия ESC
+
+      const escKeyPress = (evt) => {
+        if (evt.keyCode === ESC_KEYCODE && isEdit) {
+          replaceEditToRegular();
+        }
+      };
+
       regularEvent.setOpenClickHandler(replaceRegularToEdit);
       editingEvent.setCloseClickHandler(replaceEditToRegular);
       editingEvent.setFormSubmitHandler(replaceEditToRegular);
-      document.addEventListener(`keydown`, (evt) => {
-        if (evt.keyCode === 27 && isEdit) {
-          replaceEditToRegular();
-        }
-      });
     }
   }
 
@@ -97,11 +100,14 @@ export default class Trip {
   }
 
   _renderDaysEventsNormally() {
-    this._daysCounter = 1;
+    // Счетчик дней путешествия
+    let daysCounter = 1;
     for (let currentDate of this._objectDateKeys) {
-      this._renderDay(currentDate);
+      this._renderDay(currentDate, daysCounter);
+      daysCounter++;
     }
-    document.querySelector(`.trip-sort__item--day`).textContent = `Day`;
+    // Показать слово день в сортировке
+    this._sorting.hideShowDayText(true);
   }
 
   _renderEventsSorted() {
@@ -110,7 +116,8 @@ export default class Trip {
     const eventsList = new EventsList();
     render(dayItem, eventsList, renderPosition.BEFOREEND);
     this._renderEvents(eventsList, this._events);
-    document.querySelector(`.trip-sort__item--day`).textContent = ``;
+    // Скрыть слово день в сортировке
+    this._sorting.hideShowDayText(false);
   }
 
   _clearDaysList() {

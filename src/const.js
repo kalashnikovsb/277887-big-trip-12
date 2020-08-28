@@ -1,4 +1,4 @@
-const EVENTS_COUNT = 10;
+const EVENTS_COUNT = 5;
 const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget.`,
   `Fusce tristique felis at fermentum pharetra.`, `Aliquam id orci ut lectus varius viverra.`,
@@ -22,6 +22,7 @@ const MIN_NUMBER_PHOTOS = 0;
 const MAX_NUMBER_PHOTOS = 10;
 const MIN_PRICE = 10;
 const MAX_PRICE = 100;
+const ESC_KEYCODE = 27;
 
 const SORT_TYPE = {
   default: `default`,
@@ -39,5 +40,6 @@ export {
   MAX_NUMBER_PHOTOS,
   MIN_PRICE,
   MAX_PRICE,
+  ESC_KEYCODE,
   SORT_TYPE,
 };
