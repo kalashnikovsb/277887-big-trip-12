@@ -1,4 +1,5 @@
-import {getCorrectPreposition, parseTimeToArray, createElement} from "../utils.js";
+import Abstract from "./Abstract.js";
+import {getCorrectPreposition, parseTimeToArray} from "../utils/events.js";
 import {
   EVENT_TYPES,
   CITIES,
@@ -139,21 +140,33 @@ const creaveEventEditTemplate = (event) => {
   );
 };
 
-export default class EventEdit {
+export default class EventEdit extends Abstract {
   constructor(event) {
+    super();
     this._event = event;
-    this._element = null;
+    this._closeClickHandler = this._closeClickHandler.bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
+
   getTemplate() {
     return creaveEventEditTemplate(this._event);
   }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+
+  _closeClickHandler() {
+    this._callback.click();
   }
-  removeElement() {
-    this._element = null;
+
+  setCloseClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._closeClickHandler);
+  }
+
+  _formSubmitHandler() {
+    this._callback.submit();
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.submit = callback;
+    this.getElement().querySelector(`.event--edit`).addEventListener(`submit`, this._formSubmitHandler);
   }
 }

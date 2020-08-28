@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import Abstract from "./Abstract.js";
 
 const renderTripInfoTitle = (events) => {
   const destinations = new Set();
@@ -20,9 +20,14 @@ const renderTripInfoTitle = (events) => {
 };
 
 const renderCorrectTime = (events) => {
-  const firstDate = events[0].timeStart.toString().slice(4, 10);
-  const lastDate = events[events.length - 1].timeStart.toString().slice(8, 10);
-  return `${firstDate}&nbsp;&mdash;&nbsp;${lastDate}`;
+  // Проверяю есть ли вобще события events, если нет то вернуть пустую строку
+  if (events.length) {
+    const firstDate = events[0].timeStart.toString().slice(4, 10);
+    const lastDate = events[events.length - 1].timeStart.toString().slice(8, 10);
+    return `${firstDate}&nbsp;&mdash;&nbsp;${lastDate}`;
+  } else {
+    return ``;
+  }
 };
 
 const getFullPrice = (events) => {
@@ -54,21 +59,12 @@ const createTripInfoTemplate = (events) => {
   );
 };
 
-export default class TripInfo {
+export default class TripInfo extends Abstract {
   constructor(events) {
+    super();
     this._events = events;
-    this._element = null;
   }
   getTemplate() {
     return createTripInfoTemplate(this._events);
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }

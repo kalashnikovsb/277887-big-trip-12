@@ -1,12 +1,15 @@
-import {createElement} from "../utils.js";
+import Abstract from "./Abstract.js";
 
 const renderCorrectTime = (string) => {
+  if (!string) {
+    return ``;
+  }
   let currentDate = new Date(Date.parse(string));
   let result = currentDate.toString().slice(4, 10);
   return result;
 };
 
-const createDayItemTemplate = (dayNumber, date) => {
+const createDayItemTemplate = (dayNumber = ``, date = ``) => {
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
@@ -17,22 +20,13 @@ const createDayItemTemplate = (dayNumber, date) => {
   );
 };
 
-export default class DayItem {
+export default class DayItem extends Abstract {
   constructor(dayNumber, date) {
+    super();
     this._dayNumber = dayNumber;
     this._date = date;
-    this._element = null;
   }
   getTemplate() {
     return createDayItemTemplate(this._dayNumber, this._date);
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }

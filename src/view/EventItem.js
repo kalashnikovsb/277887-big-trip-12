@@ -1,4 +1,5 @@
-import {getCorrectPreposition, parseTimeToArray, createElement} from "../utils.js";
+import Abstract from "./Abstract.js";
+import {getCorrectPreposition, parseTimeToArray} from "../utils/events.js";
 
 const renderAdditionalOptions = (options) => {
   return options.map((option) => {
@@ -56,21 +57,23 @@ const createEventItemTemplate = (event) => {
   );
 };
 
-export default class EventItem {
+export default class EventItem extends Abstract {
   constructor(event) {
+    super();
     this._event = event;
-    this._element = null;
+    this._openClickHandler = this._openClickHandler.bind(this);
   }
+
   getTemplate() {
     return createEventItemTemplate(this._event);
   }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+
+  _openClickHandler() {
+    this._callback.click();
   }
-  removeElement() {
-    this._element = null;
+
+  setOpenClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._openClickHandler);
   }
 }
