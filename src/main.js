@@ -1,6 +1,6 @@
-import Trip from "./presenter/Trip.js";
-import HeaderMenu from "./view/HeaderMenu.js";
-import Filter from "./view/Filter.js";
+import Trip from "./presenter/tripPresenter.js";
+import HeaderMenu from "./view/headerMenuView.js";
+import Filter from "./view/filterView.js";
 import {EVENTS_COUNT} from "./const.js";
 import {render, renderPosition} from "./utils/render.js";
 import {eventsSortByTime} from "./utils/events.js";

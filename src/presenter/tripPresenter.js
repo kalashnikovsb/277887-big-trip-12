@@ -1,14 +1,14 @@
-import TripInfo from "../view/TripInfo.js";
-import Sorting from "../view/Sorting.js";
-import DaysList from "../view/DaysList.js";
-import DayItem from "../view/DayItem.js";
-import EventsList from "../view/EventsList.js";
-import EventItem from "../view/EventItem.js";
-import EventEdit from "../view/EventEdit.js";
-import NoEvents from "../view/NoEvents.js";
-import {SORT_TYPE, ESC_KEYCODE} from "../const.js";
+import TripInfo from "../view/tripInfoView.js";
+import Sorting from "../view/sortingView.js";
+import DaysList from "../view/daysListView.js";
+import DayItem from "../view/dayItemView.js";
+import EventsList from "../view/eventsListView.js";
+import NoEvents from "../view/noEventsView.js";
+import EventPresenter from "./eventPresenter.js";
+import {SORT_TYPE} from "../const.js";
+import {updateItem} from "../utils/common.js";
 import {getObjectDatesList, sortTimeUp, sortPriceUp} from "../utils/events.js";
-import {renderPosition, render, replace} from "../utils/render.js";
+import {renderPosition, render, remove} from "../utils/render.js";
 
 
 export default class Trip {
@@ -19,7 +19,12 @@ export default class Trip {
     this._sorting = new Sorting();
     this._noEvents = new NoEvents();
     this._daysList = new DaysList();
+
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
+    this._eventChangeHandler = this._eventChangeHandler.bind(this);
+
+    this._daysArray = [];
+    this._eventPresenters = {};
   }
 
 
@@ -46,6 +51,9 @@ export default class Trip {
 
   _renderDay(currentDate, daysCounter) {
     const dayItem = new DayItem(daysCounter, currentDate);
+
+    // Кладу в массив дней для удаления при сортировке
+    this._daysArray.push(dayItem);
     render(this._daysList, dayItem, renderPosition.BEFOREEND);
 
     const allDays = this._daysList.getElement().querySelectorAll(`.day`);
@@ -65,36 +73,23 @@ export default class Trip {
     // Отрисовываю события массива eventsForRendering
     // в контейнер eventsList
     for (const event of eventsForRendering) {
-      const regularEvent = new EventItem(event);
-      const editingEvent = new EventEdit(event);
-      render(eventsList, regularEvent, renderPosition.BEFOREEND);
-
-      const replaceRegularToEdit = () => {
-        replace(editingEvent, regularEvent);
-        document.addEventListener(`keydown`, escKeyPress);
-      };
-
-      const replaceEditToRegular = () => {
-        replace(regularEvent, editingEvent);
-        document.removeEventListener(`keydown`, escKeyPress);
-      };
-
-      const escKeyPress = (evt) => {
-        if (evt.keyCode === ESC_KEYCODE) {
-          replaceEditToRegular();
-        }
-      };
-
-      regularEvent.setOpenClickHandler(replaceRegularToEdit);
-      editingEvent.setCloseClickHandler(replaceEditToRegular);
-      editingEvent.setFormSubmitHandler(replaceEditToRegular);
+      this._renderEvent(eventsList, event);
     }
   }
+
+
+  _renderEvent(container, event) {
+    const eventPresenter = new EventPresenter(container, this._eventChangeHandler);
+    eventPresenter.init(event);
+    this._eventPresenters[event.id] = eventPresenter;
+  }
+
 
   _renderSorting() {
     render(this._tripEvents, this._sorting, renderPosition.BEFOREEND);
     this._sorting.setSortTypeChangeHandler(this._sortTypeChangeHandler);
   }
+
 
   _renderDaysEventsNormally() {
     // Счетчик дней путешествия
@@ -107,8 +102,11 @@ export default class Trip {
     this._sorting.hideShowDayText(true);
   }
 
+
   _renderEventsSorted() {
     const dayItem = new DayItem();
+    // Проверка
+    this._daysArray.push(dayItem);
     render(this._daysList, dayItem, renderPosition.BEFOREEND);
     const eventsList = new EventsList();
     render(dayItem, eventsList, renderPosition.BEFOREEND);
@@ -117,16 +115,20 @@ export default class Trip {
     this._sorting.hideShowDayText(false);
   }
 
+
   _clearDaysList() {
-    this._daysList.getElement().innerHTML = ``;
+    // Удаляю дни
+    this._daysArray.forEach((day) => {
+      remove(day);
+    });
+    this._daysArray = [];
+    // Удаляю события
+    Object.values(this._eventPresenters).forEach((presenter) => {
+      presenter.destroy();
+    });
+    this._eventPresenters = {};
   }
 
-  _sortTypeChangeHandler(sortType) {
-    if (this._currentSortType === sortType) {
-      return;
-    }
-    this._sortEvents(sortType);
-  }
 
   _sortEvents(sortType) {
     switch (sortType) {
@@ -146,5 +148,20 @@ export default class Trip {
     } else {
       this._renderEventsSorted();
     }
+  }
+
+
+  _sortTypeChangeHandler(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+    this._sortEvents(sortType);
+  }
+
+
+  _eventChangeHandler(updatedEvent) {
+    this._events = updateItem(this._events, updatedEvent);
+    this._sourceEvents = updateItem(this._sourceEvents, updatedEvent);
+    this._eventPresenters[updatedEvent.id].init(updatedEvent);
   }
 }

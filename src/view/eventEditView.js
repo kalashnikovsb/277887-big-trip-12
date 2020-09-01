@@ -1,10 +1,11 @@
-import Abstract from "./Abstract.js";
+import Abstract from "./abstractView.js";
 import {getCorrectPreposition, parseTimeToArray} from "../utils/events.js";
 import {
   EVENT_TYPES,
   CITIES,
   ADDITIONAL_OPTIONS,
 } from "../const.js";
+
 
 const renderEventsGroup = (array) => {
   return array.map((type) => {
@@ -18,6 +19,7 @@ const renderEventsGroup = (array) => {
   }).join(``);
 };
 
+
 const renderDestinationList = (array) => {
   return array.map((arrayItem) => {
     return (
@@ -25,6 +27,7 @@ const renderDestinationList = (array) => {
     );
   }).join(``);
 };
+
 
 const renderAdditionalOptions = (options) => {
   // Получаю массив названий опций текущего события
@@ -46,14 +49,15 @@ const renderAdditionalOptions = (options) => {
   }).join(``);
 };
 
+
 const renderCorrectTime = (date) => {
   const [year, month, day, hours, minutes] = parseTimeToArray(date);
   return `${String(year).slice(-2)}/${month}/${day} ${hours}:${minutes}`;
 };
 
+
 const creaveEventEditTemplate = (event) => {
   const {eventType, destination, timeStart, timeEnd, additionalOptions, price} = event;
-
   const transferEvents = EVENT_TYPES.slice(0, 7);
   const activityEvents = EVENT_TYPES.slice(7);
 
@@ -140,33 +144,52 @@ const creaveEventEditTemplate = (event) => {
   );
 };
 
+
 export default class EventEdit extends Abstract {
   constructor(event) {
     super();
     this._event = event;
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
+
 
   getTemplate() {
     return creaveEventEditTemplate(this._event);
   }
 
+
   _closeClickHandler() {
     this._callback.click();
   }
+
 
   setCloseClickHandler(callback) {
     this._callback.click = callback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._closeClickHandler);
   }
 
-  _formSubmitHandler() {
-    this._callback.submit();
+
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.submit(this._event);
   }
+
 
   setFormSubmitHandler(callback) {
     this._callback.submit = callback;
     this.getElement().querySelector(`.event--edit`).addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+
+  _favoriteClickHandler() {
+    this._callback.favoriteClick();
+  }
+
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
   }
 }

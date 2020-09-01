@@ -1,4 +1,5 @@
-import Abstract from "../view/Abstract.js";
+import Abstract from "../view/abstractView.js";
+
 
 const renderPosition = {
   AFTERBEGIN: `afterbegin`,
@@ -6,6 +7,7 @@ const renderPosition = {
   BEFOREBEGIN: `beforebegin`,
   BEFOREEND: `beforeend`,
 };
+
 
 const render = (container, element, position) => {
   if (container instanceof Abstract) {
@@ -30,6 +32,7 @@ const render = (container, element, position) => {
   }
 };
 
+
 const replace = (newChild, oldChild) => {
   if (oldChild instanceof Abstract) {
     oldChild = oldChild.getElement();
@@ -44,6 +47,7 @@ const replace = (newChild, oldChild) => {
   parent.replaceChild(newChild, oldChild);
 };
 
+
 const remove = (component) => {
   if (!(component instanceof Abstract)) {
     throw new Error(`Can remove only components`);
@@ -51,5 +55,6 @@ const remove = (component) => {
   component.getElement().remove();
   component.removeElement();
 };
+
 
 export {renderPosition, render, replace, remove};

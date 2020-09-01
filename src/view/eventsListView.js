@@ -1,10 +1,12 @@
-import Abstract from "./Abstract.js";
+import Abstract from "./abstractView.js";
+
 
 const createEventsListTemplate = () => {
   return (
     `<ul class="trip-events__list"></ul>`
   );
 };
+
 
 export default class EventsList extends Abstract {
   getTemplate() {

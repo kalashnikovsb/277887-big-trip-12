@@ -1,5 +1,6 @@
-import Abstract from "./Abstract.js";
+import Abstract from "./abstractView.js";
 import {SORT_TYPE} from "../const.js";
+
 
 const createSortingTemplate = () => {
   return (
@@ -36,15 +37,18 @@ const createSortingTemplate = () => {
   );
 };
 
+
 export default class Sorting extends Abstract {
   constructor() {
     super();
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
+
   getTemplate() {
     return createSortingTemplate();
   }
+
 
   _sortTypeChangeHandler(evt) {
     if (evt.target.tagName !== `INPUT`) {
@@ -53,10 +57,12 @@ export default class Sorting extends Abstract {
     this._callback.sortTypeChange(evt.target.dataset.sortType);
   }
 
+
   setSortTypeChangeHandler(callback) {
     this._callback.sortTypeChange = callback;
     this.getElement().addEventListener(`click`, this._sortTypeChangeHandler);
   }
+
 
   hideShowDayText(boolean) {
     const dayBlock = this.getElement().querySelector(`.trip-sort__item--day`);

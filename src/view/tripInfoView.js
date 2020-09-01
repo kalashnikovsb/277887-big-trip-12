@@ -1,4 +1,5 @@
-import Abstract from "./Abstract.js";
+import Abstract from "./abstractView.js";
+
 
 const renderTripInfoTitle = (events) => {
   const destinations = new Set();
@@ -19,6 +20,7 @@ const renderTripInfoTitle = (events) => {
   return resultString;
 };
 
+
 const renderCorrectTime = (events) => {
   // Проверяю есть ли вобще события events, если нет то вернуть пустую строку
   if (events.length) {
@@ -30,6 +32,7 @@ const renderCorrectTime = (events) => {
   }
 };
 
+
 const getFullPrice = (events) => {
   let result = 0;
   events.forEach((event) => {
@@ -40,6 +43,7 @@ const getFullPrice = (events) => {
   });
   return result;
 };
+
 
 const createTripInfoTemplate = (events) => {
   return (
@@ -58,6 +62,7 @@ const createTripInfoTemplate = (events) => {
     </section>`
   );
 };
+
 
 export default class TripInfo extends Abstract {
   constructor(events) {

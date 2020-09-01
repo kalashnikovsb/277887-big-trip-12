@@ -10,6 +10,13 @@ import {
   MAX_PRICE,
 } from "../const.js";
 
+// Date.now() и Math.random() - плохие решения для генерации id
+// в "продуктовом" коде, а для моков самое то.
+// Для "продуктового" кода используйте что-то понадежнее,
+// вроде nanoid - https://github.com/ai/nanoid
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
+
 const generateAdditionalOptions = (optionsArray) => {
   // Беру случайную опцию
   const optionsCount = getRandomInteger(0, optionsArray.length - 1);
@@ -23,6 +30,7 @@ const generateAdditionalOptions = (optionsArray) => {
   return Array.from(optionsList);
 };
 
+
 const generateDestinationPhotos = () => {
   const photosCount = getRandomInteger(MIN_NUMBER_PHOTOS, MAX_NUMBER_PHOTOS);
   const photosList = [];
@@ -31,6 +39,7 @@ const generateDestinationPhotos = () => {
   }
   return photosList;
 };
+
 
 const generateTime = () => {
   const randomTime = new Date();
@@ -42,12 +51,14 @@ const generateTime = () => {
   return randomTime;
 };
 
+
 export const generateEvent = () => {
   const timeStart = generateTime();
   // Прибавляю рандомное количество времени от 1 часа до 10 часов
   const timeEnd = new Date(timeStart.getTime() + getRandomInteger(3600000, 36000000));
 
   return {
+    id: generateId(),
     eventType: getRandomArrayElement(EVENT_TYPES),
     destination: getRandomArrayElement(CITIES),
     destinationInfo: getRandomArrayElement(DESCRIPTIONS),

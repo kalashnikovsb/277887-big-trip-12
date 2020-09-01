@@ -23,12 +23,12 @@ const MAX_NUMBER_PHOTOS = 10;
 const MIN_PRICE = 10;
 const MAX_PRICE = 100;
 const ESC_KEYCODE = 27;
-
 const SORT_TYPE = {
   default: `default`,
   timeUp: `date-up`,
   priceUp: `price-up`,
 };
+
 
 export {
   EVENTS_COUNT,

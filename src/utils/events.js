@@ -4,6 +4,7 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
+
 const getCorrectPreposition = (value) => {
   switch (value) {
     case `Check-in`:
@@ -15,12 +16,14 @@ const getCorrectPreposition = (value) => {
   }
 };
 
+
 const getNiceFormat = (number) => {
   if (number < 10) {
     number = `0${number}`;
   }
   return number;
 };
+
 
 const parseTimeToArray = (date) => {
   const year = date.getFullYear();
@@ -40,12 +43,14 @@ const parseTimeToArray = (date) => {
   return [year, month, day, hours, minutes];
 };
 
+
 // Функция сортировки событий по времени
 const eventsSortByTime = (first, second) => {
   const firstTime = first.timeStart;
   const secondValue = second.timeStart;
   return firstTime - secondValue;
 };
+
 
 // Функция получения массива у которого каждый ключ это день в виде строки,
 // а значение это массив событий этого дня
@@ -65,14 +70,17 @@ const getObjectDatesList = (arrayOfEvents) => {
   return dates;
 };
 
+
 const sortTimeUp = (eventA, eventB) => {
   const durationA = eventA.timeEnd.getTime() - eventA.timeStart.getTime();
   const durationB = eventB.timeEnd.getTime() - eventB.timeStart.getTime();
   return durationB - durationA;
 };
 
+
 const sortPriceUp = (eventA, eventB) => {
   return eventB.price - eventA.price;
 };
+
 
 export {getCorrectPreposition, getNiceFormat, parseTimeToArray, createElement, eventsSortByTime, getObjectDatesList, sortTimeUp, sortPriceUp};
