@@ -75,12 +75,12 @@ const creaveEventEditTemplate = (event) => {
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Transfer</legend>
-                ${renderEventsGroup(transferEvents)};
+                ${renderEventsGroup(transferEvents)}
               </fieldset>
 
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Activity</legend>
-                ${renderEventsGroup(activityEvents)};
+                ${renderEventsGroup(activityEvents)}
               </fieldset>
             </div>
           </div>
@@ -173,23 +173,24 @@ export default class EventEdit extends Abstract {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.submit(this._event);
+    this._callback.formSubmit(this._event);
   }
 
 
   setFormSubmitHandler(callback) {
-    this._callback.submit = callback;
+    this._callback.formSubmit = callback;
     this.getElement().querySelector(`.event--edit`).addEventListener(`submit`, this._formSubmitHandler);
   }
 
 
-  _favoriteClickHandler() {
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
     this._callback.favoriteClick();
   }
 
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._favoriteClickHandler);
+    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._favoriteClickHandler);
   }
 }

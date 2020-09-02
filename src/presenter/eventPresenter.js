@@ -8,11 +8,12 @@ export default class Event {
   constructor(container, changeData) {
     this._container = container;
     this._changeData = changeData;
+
     this._replaceRegularToEdit = this._replaceRegularToEdit.bind(this);
     this._replaceEditToRegular = this._replaceEditToRegular.bind(this);
-    this._formSubmit = this._formSubmit.bind(this);
-    this._favoriteClick = this._favoriteClick.bind(this);
     this._escKeyPressHandler = this._escKeyPressHandler.bind(this);
+    this._favoriteClick = this._favoriteClick.bind(this);
+    this._formSubmit = this._formSubmit.bind(this);
   }
 
 
