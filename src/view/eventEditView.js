@@ -4,6 +4,7 @@ import {
   EVENT_TYPES,
   CITIES,
   ADDITIONAL_OPTIONS,
+  BLANK_EVENT,
 } from "../const.js";
 
 
@@ -56,10 +57,13 @@ const renderCorrectTime = (date) => {
 };
 
 
-const creaveEventEditTemplate = (event) => {
-  const {eventType, destination, timeStart, timeEnd, additionalOptions, price} = event;
+const createEventEditTemplate = (data) => {
+  const {eventType, destination, timeStart, timeEnd, additionalOptions, price, isFavorite} = data;
+
   const transferEvents = EVENT_TYPES.slice(0, 7);
   const activityEvents = EVENT_TYPES.slice(7);
+
+  const isFavoriteChecked = isFavorite ? `checked` : ``;
 
   return (
     `<li class="trip-events__item">
@@ -118,7 +122,7 @@ const creaveEventEditTemplate = (event) => {
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Delete</button>
 
-          <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
+          <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavoriteChecked}>
           <label class="event__favorite-btn" for="event-favorite-1">
             <span class="visually-hidden">Add to favorite</span>
             <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -146,9 +150,11 @@ const creaveEventEditTemplate = (event) => {
 
 
 export default class EventEdit extends Abstract {
-  constructor(event) {
+  constructor(event = BLANK_EVENT) {
     super();
-    this._event = event;
+
+    this._data = EventEdit.parseEventToData(event);
+
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
@@ -156,7 +162,7 @@ export default class EventEdit extends Abstract {
 
 
   getTemplate() {
-    return creaveEventEditTemplate(this._event);
+    return createEventEditTemplate(this._data);
   }
 
 
@@ -173,7 +179,7 @@ export default class EventEdit extends Abstract {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(this._event);
+    this._callback.formSubmit(EventEdit.parseDataToEvent(this._data));
   }
 
 
@@ -183,8 +189,7 @@ export default class EventEdit extends Abstract {
   }
 
 
-  _favoriteClickHandler(evt) {
-    evt.preventDefault();
+  _favoriteClickHandler() {
     this._callback.favoriteClick();
   }
 
@@ -192,5 +197,20 @@ export default class EventEdit extends Abstract {
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+
+  static parseEventToData(event) {
+    return Object.assign({}, event, {isFavorite: Boolean(event.favorite)});
+  }
+
+
+  static parseDataToEvent(data) {
+    data = Object.assign({}, data);
+    if (!data.isFavorite) {
+      data.favorite = false;
+    }
+    delete data.isFavorite;
+    return data;
   }
 }

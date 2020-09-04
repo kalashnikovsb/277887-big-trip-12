@@ -72,8 +72,9 @@ export default class Event {
     document.removeEventListener(`keydown`, this._escKeyPressHandler);
   }
 
+
   _favoriteClick() {
-    this._changeData(Object.assign({}, this._event, {isFavorite: !this._event.isFavorite}));
+    this._changeData(Object.assign({}, this._event, {favorite: !this._event.favorite}));
   }
 
 

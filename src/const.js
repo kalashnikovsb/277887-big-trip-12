@@ -28,6 +28,17 @@ const SORT_TYPE = {
   timeUp: `date-up`,
   priceUp: `price-up`,
 };
+const BLANK_EVENT = {
+  eventType: null,
+  destination: null,
+  destinationInfo: ``,
+  destinationPhotos: null,
+  additionalOptions: null,
+  timeStart: null,
+  timeEnd: null,
+  price: null,
+  isFavorite: false,
+};
 
 
 export {
@@ -42,4 +53,5 @@ export {
   MAX_PRICE,
   ESC_KEYCODE,
   SORT_TYPE,
+  BLANK_EVENT,
 };

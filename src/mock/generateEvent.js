@@ -67,5 +67,6 @@ export const generateEvent = () => {
     timeStart,
     timeEnd,
     price: getRandomInteger(MIN_PRICE, MAX_PRICE),
+    favorite: Boolean(getRandomInteger(0, 1)),
   };
 };
