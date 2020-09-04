@@ -189,7 +189,8 @@ export default class EventEdit extends Abstract {
   }
 
 
-  _favoriteClickHandler() {
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
     this._callback.favoriteClick();
   }
 
