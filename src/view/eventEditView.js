@@ -39,7 +39,7 @@ const renderAdditionalOptions = (options) => {
   return ADDITIONAL_OPTIONS.map((currentOption) => {
     return (
       `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${currentOption.id}-1" type="checkbox" name="event-offer-${currentOption.id}" ${keys.indexOf(currentOption.name) !== -1 ? `checked` : ``}>
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${currentOption.id}-1" type="checkbox" name="event-offer-${currentOption.id}" data-option-name="${currentOption.name}" data-option-price="${currentOption.price}" ${keys.indexOf(currentOption.name) !== -1 ? `checked` : ``}>
         <label class="event__offer-label" for="event-offer-${currentOption.id}-1">
           <span class="event__offer-title">${currentOption.name}</span>
           &plus;
@@ -55,6 +55,14 @@ const renderCorrectTime = (date) => {
   const [year, month, day, hours, minutes] = parseTimeToArray(date);
   return `${String(year).slice(-2)}/${month}/${day} ${hours}:${minutes}`;
 };
+
+const getFullPrice = (price, additionalOptions) => {
+  let fullPrice = price;
+  additionalOptions.forEach((option) => {
+    fullPrice += option.price;
+  });
+  return fullPrice;
+}
 
 
 const createEventEditTemplate = (data) => {
@@ -116,7 +124,7 @@ const createEventEditTemplate = (data) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${getFullPrice(price, additionalOptions)}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -157,9 +165,19 @@ export default class EventEdit extends Abstract {
 
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
-    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._favoriteClickHandler);
+    this._optionClickHandler = this._optionClickHandler.bind(this);
+
+
+
+
+    Array.from(this.getElement().querySelectorAll(`.event__offer-checkbox`)).forEach((checkbox) => {
+      checkbox.addEventListener(`click`, this._optionClickHandler);
+    });
+
+
+
+
   }
 
 
@@ -193,14 +211,14 @@ export default class EventEdit extends Abstract {
 
   _favoriteClickHandler(evt) {
     evt.preventDefault();
-    this.updateData({isFavorite: !this._data.isFavorite});
+    this._callback.favoriteClick();
   }
 
 
-  // setFavoriteClickHandler(callback) {
-  //   this._callback.favoriteClick = callback;
-  //   this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._favoriteClickHandler);
-  // }
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._favoriteClickHandler);
+  }
 
 
   static parseEventToData(event) {
@@ -217,14 +235,37 @@ export default class EventEdit extends Abstract {
     return data;
   }
 
-  updateElement() {
-    let prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.removeElement();
-    const newElement = this.getElement();
-    parent.replaceChild(newElement, prevElement);
-    prevElement = null;
+
+
+
+  _optionClickHandler(evt) {
+    const priceElement = this.getElement().querySelector(`.event__input--price`);
+    const price = Number(priceElement.value);
+    const update = this._data.additionalOptions;
+
+
+
+
+    let result = [];
+    let  indexOfClicked = ADDITIONAL_OPTIONS.filter((option) => {
+      option.name === evt.target.dataset.optionName;
+      result.push(option.name);
+    });
+
+    console.log(result);
+
+
+
+    if (evt.target.hasAttribute(`checked`)) {
+      evt.target.removeAttribute(`checked`);
+      priceElement.value = Number(priceElement.value) - Number(evt.target.dataset.optionPrice);
+    } else {
+      evt.target.setAttribute(`checked`, ``);
+      priceElement.value = Number(priceElement.value) + Number(evt.target.dataset.optionPrice);
+    }
   }
+
+
 
   updateData(update) {
     if (!update) {
@@ -232,5 +273,14 @@ export default class EventEdit extends Abstract {
     }
     this._data = Object.assign({}, this._data, update);
     this.updateElement();
+  }
+
+  updateElement() {
+    let prevElement = this.getElement();
+    const parent = prevElement.parentElement;
+    this.removeElement();
+    const newElement = this.getElement();
+    parent.replaceChild(newElement, prevElement);
+    prevElement = null;
   }
 }

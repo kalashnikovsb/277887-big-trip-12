@@ -13,6 +13,14 @@ const renderAdditionalOptions = (options) => {
   }).join(``);
 };
 
+const getFullPrice = (price, additionalOptions) => {
+  let fullPrice = price;
+  additionalOptions.forEach((option) => {
+    fullPrice += option.price;
+  });
+  return fullPrice;
+}
+
 
 const renderCorrectTime = (date) => {
   const [year, month, day, hours, minutes] = parseTimeToArray(date);
@@ -44,7 +52,7 @@ const createEventItemTemplate = (event) => {
         </div>
 
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${price}</span>
+          &euro;&nbsp;<span class="event__price-value">${getFullPrice(price, additionalOptions)}</span>
         </p>
 
         <h4 class="visually-hidden">Offers:</h4>
