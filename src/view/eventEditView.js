@@ -157,7 +157,9 @@ export default class EventEdit extends Abstract {
 
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._favoriteClickHandler);
   }
 
 
@@ -191,14 +193,14 @@ export default class EventEdit extends Abstract {
 
   _favoriteClickHandler(evt) {
     evt.preventDefault();
-    this._callback.favoriteClick();
+    this.updateData({isFavorite: !this._data.isFavorite});
   }
 
 
-  setFavoriteClickHandler(callback) {
-    this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._favoriteClickHandler);
-  }
+  // setFavoriteClickHandler(callback) {
+  //   this._callback.favoriteClick = callback;
+  //   this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._favoriteClickHandler);
+  // }
 
 
   static parseEventToData(event) {

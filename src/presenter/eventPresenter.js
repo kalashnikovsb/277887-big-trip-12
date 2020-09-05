@@ -12,7 +12,7 @@ export default class Event {
     this._replaceRegularToEdit = this._replaceRegularToEdit.bind(this);
     this._replaceEditToRegular = this._replaceEditToRegular.bind(this);
     this._escKeyPressHandler = this._escKeyPressHandler.bind(this);
-    this._favoriteClick = this._favoriteClick.bind(this);
+    // this._favoriteClick = this._favoriteClick.bind(this);
     this._formSubmit = this._formSubmit.bind(this);
   }
 
@@ -29,7 +29,7 @@ export default class Event {
     this._regularEvent.setOpenClickHandler(this._replaceRegularToEdit);
     this._editingEvent.setCloseClickHandler(this._replaceEditToRegular);
     this._editingEvent.setFormSubmitHandler(this._formSubmit);
-    this._editingEvent.setFavoriteClickHandler(this._favoriteClick);
+    // this._editingEvent.setFavoriteClickHandler(this._favoriteClick);
 
     if (!prevRegularEvent || !prevEditingEvent) {
       render(this._container, this._regularEvent, renderPosition.BEFOREEND);
@@ -73,9 +73,9 @@ export default class Event {
   }
 
 
-  _favoriteClick() {
-    this._changeData(Object.assign({}, this._event, {favorite: !this._event.favorite}));
-  }
+  // _favoriteClick() {
+  //   this._changeData(Object.assign({}, this._event, {favorite: !this._event.favorite}));
+  // }
 
 
   _escKeyPressHandler(evt) {
