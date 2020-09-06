@@ -8,12 +8,12 @@ import {
 } from "../const.js";
 
 
-const renderEventsGroup = (array) => {
-  return array.map((type) => {
+const renderEventsGroup = (events, currentType) => {
+  return events.map((type) => {
     type = type.toLowerCase();
     return (
       `<div class="event__type-item">
-        <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+        <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${type === currentType.toLowerCase() ? `checked` : ``}>
         <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
       </div>`
     );
@@ -56,14 +56,6 @@ const renderCorrectTime = (date) => {
   return `${String(year).slice(-2)}/${month}/${day} ${hours}:${minutes}`;
 };
 
-const getFullPrice = (price, additionalOptions) => {
-  let fullPrice = price;
-  additionalOptions.forEach((option) => {
-    fullPrice += option.price;
-  });
-  return fullPrice;
-};
-
 
 const createEventEditTemplate = (data) => {
   const {eventType, destination, timeStart, timeEnd, additionalOptions, price, isFavorite} = data;
@@ -87,12 +79,12 @@ const createEventEditTemplate = (data) => {
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Transfer</legend>
-                ${renderEventsGroup(transferEvents)}
+                ${renderEventsGroup(transferEvents, eventType)}
               </fieldset>
 
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Activity</legend>
-                ${renderEventsGroup(activityEvents)}
+                ${renderEventsGroup(activityEvents, eventType)}
               </fieldset>
             </div>
           </div>
@@ -124,7 +116,7 @@ const createEventEditTemplate = (data) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${getFullPrice(price, additionalOptions)}">
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -167,16 +159,15 @@ export default class EventEdit extends Abstract {
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._optionClickHandler = this._optionClickHandler.bind(this);
-
-
-
+    this._typeClickHandler = this._typeClickHandler.bind(this);
 
     Array.from(this.getElement().querySelectorAll(`.event__offer-checkbox`)).forEach((checkbox) => {
       checkbox.addEventListener(`click`, this._optionClickHandler);
     });
 
-
-
+    Array.from(this.getElement().querySelectorAll(`.event__type-list .event__type-input`)).forEach((input) => {
+      input.addEventListener(`click`, this._typeClickHandler);
+    });
 
   }
 
@@ -238,49 +229,53 @@ export default class EventEdit extends Abstract {
 
 
 
-  _toggleCheckedAttribute(evt) {
-    const priceElement = this.getElement().querySelector(`.event__input--price`);
-    const price = Number(priceElement.value);
 
-    if (evt.target.hasAttribute(`checked`)) {
-      evt.target.removeAttribute(`checked`);
-      priceElement.value = price - Number(evt.target.dataset.optionPrice);
-    } else {
-      evt.target.setAttribute(`checked`, ``);
-      priceElement.value = price + Number(evt.target.dataset.optionPrice);
-    }
+
+
+
+
+  _typeClickHandler(evt) {
+    const currentType = evt.target.value;
+
+    const typeFromList = EVENT_TYPES.find((type) => {
+      return (type.toLowerCase() === currentType);
+    });
+
+    this.updateData({eventType: typeFromList});
   }
 
 
   _optionClickHandler(evt) {
-    this._toggleCheckedAttribute(evt);
+    const finalData = this._data.additionalOptions.slice();
 
-    const originalOptionList = this._data.additionalOptions.slice();
-    const checkboxes = Array.from(this.getElement().querySelectorAll(`.event__offer-checkbox`));
+    const optionFromList = ADDITIONAL_OPTIONS.find((option) => {
+      return (option.name === evt.target.dataset.optionName);
+    });
 
-    let checkedCheckboxes = [];
-    checkboxes.forEach((checkbox) => {
-      if (checkbox.hasAttribute(`checked`)) {
-        checkedCheckboxes.push(checkbox);
+    let isExist = false;
+    let index = -1;
+    this._data.additionalOptions.forEach((option, i) => {
+      if (option.name === optionFromList.name) {
+        isExist = true;
+        index = i;
       }
     });
 
-    let finalData = [];
-    ADDITIONAL_OPTIONS.forEach((option) => {
-      checkedCheckboxes.forEach((checkbox) => {
-        if (option.name === checkbox.dataset.optionName) {
-          finalData.push(option);
-        }
-      });
-    });
+    if (isExist) {
+      finalData.splice(index, 1);
+    } else {
+      finalData.push(optionFromList);
+    }
 
-    console.log(finalData);
+    this.updateData({additionalOptions: finalData});
   }
 
 
 
 
   updateData(update) {
+    console.log(update);
+
     if (!update) {
       return;
     }
