@@ -237,6 +237,7 @@ export default class EventEdit extends Abstract {
 
 
 
+
   _toggleCheckedAttribute(evt) {
     const priceElement = this.getElement().querySelector(`.event__input--price`);
     const price = Number(priceElement.value);
@@ -252,9 +253,7 @@ export default class EventEdit extends Abstract {
 
 
   _optionClickHandler(evt) {
-
     this._toggleCheckedAttribute(evt);
-
 
     const originalOptionList = this._data.additionalOptions.slice();
     const checkboxes = Array.from(this.getElement().querySelectorAll(`.event__offer-checkbox`));
@@ -277,6 +276,7 @@ export default class EventEdit extends Abstract {
 
     console.log(finalData);
   }
+
 
 
 
