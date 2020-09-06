@@ -19,7 +19,7 @@ const getFullPrice = (price, additionalOptions) => {
     fullPrice += option.price;
   });
   return fullPrice;
-}
+};
 
 
 const renderCorrectTime = (date) => {

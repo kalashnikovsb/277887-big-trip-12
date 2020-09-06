@@ -62,7 +62,7 @@ const getFullPrice = (price, additionalOptions) => {
     fullPrice += option.price;
   });
   return fullPrice;
-}
+};
 
 
 const createEventEditTemplate = (data) => {
@@ -237,32 +237,45 @@ export default class EventEdit extends Abstract {
 
 
 
-
-  _optionClickHandler(evt) {
+  _toggleCheckedAttribute(evt) {
     const priceElement = this.getElement().querySelector(`.event__input--price`);
     const price = Number(priceElement.value);
-    const update = this._data.additionalOptions;
-
-
-
-
-    let result = [];
-    let  indexOfClicked = ADDITIONAL_OPTIONS.filter((option) => {
-      option.name === evt.target.dataset.optionName;
-      result.push(option.name);
-    });
-
-    console.log(result);
-
-
 
     if (evt.target.hasAttribute(`checked`)) {
       evt.target.removeAttribute(`checked`);
-      priceElement.value = Number(priceElement.value) - Number(evt.target.dataset.optionPrice);
+      priceElement.value = price - Number(evt.target.dataset.optionPrice);
     } else {
       evt.target.setAttribute(`checked`, ``);
-      priceElement.value = Number(priceElement.value) + Number(evt.target.dataset.optionPrice);
+      priceElement.value = price + Number(evt.target.dataset.optionPrice);
     }
+  }
+
+
+  _optionClickHandler(evt) {
+
+    this._toggleCheckedAttribute(evt);
+
+
+    const originalOptionList = this._data.additionalOptions.slice();
+    const checkboxes = Array.from(this.getElement().querySelectorAll(`.event__offer-checkbox`));
+
+    let checkedCheckboxes = [];
+    checkboxes.forEach((checkbox) => {
+      if (checkbox.hasAttribute(`checked`)) {
+        checkedCheckboxes.push(checkbox);
+      }
+    });
+
+    let finalData = [];
+    ADDITIONAL_OPTIONS.forEach((option) => {
+      checkedCheckboxes.forEach((checkbox) => {
+        if (option.name === checkbox.dataset.optionName) {
+          finalData.push(option);
+        }
+      });
+    });
+
+    console.log(finalData);
   }
 
 
