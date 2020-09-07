@@ -159,16 +159,18 @@ export default class EventEdit extends Abstract {
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._optionClickHandler = this._optionClickHandler.bind(this);
-    this._typeClickHandler = this._typeClickHandler.bind(this);
+    this._eventTypeClickHandler = this._eventTypeClickHandler.bind(this);
+    this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
+    this._priceChangeHandler = this._priceChangeHandler.bind(this);
 
     Array.from(this.getElement().querySelectorAll(`.event__offer-checkbox`)).forEach((checkbox) => {
       checkbox.addEventListener(`click`, this._optionClickHandler);
     });
-
     Array.from(this.getElement().querySelectorAll(`.event__type-list .event__type-input`)).forEach((input) => {
-      input.addEventListener(`click`, this._typeClickHandler);
+      input.addEventListener(`click`, this._eventTypeClickHandler);
     });
-
+    this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._destinationChangeHandler);
+    this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._priceChangeHandler);
   }
 
 
@@ -227,14 +229,21 @@ export default class EventEdit extends Abstract {
   }
 
 
+  _priceChangeHandler(evt) {
+    const finalData = evt.target.value;
+    this.updateData(finalData);
+  }
 
 
+  _destinationChangeHandler(evt) {
+    const finalData = CITIES.find((city) => {
+      return (city === evt.target.value);
+    });
+    this.updateData(finalData);
+  }
 
 
-
-
-
-  _typeClickHandler(evt) {
+  _eventTypeClickHandler(evt) {
     const currentType = evt.target.value;
 
     const typeFromList = EVENT_TYPES.find((type) => {
@@ -271,11 +280,7 @@ export default class EventEdit extends Abstract {
   }
 
 
-
-
   updateData(update) {
-    console.log(update);
-
     if (!update) {
       return;
     }
