@@ -163,14 +163,7 @@ export default class EventEdit extends Abstract {
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
     this._priceChangeHandler = this._priceChangeHandler.bind(this);
 
-    Array.from(this.getElement().querySelectorAll(`.event__offer-checkbox`)).forEach((checkbox) => {
-      checkbox.addEventListener(`click`, this._optionClickHandler);
-    });
-    Array.from(this.getElement().querySelectorAll(`.event__type-list .event__type-input`)).forEach((input) => {
-      input.addEventListener(`click`, this._eventTypeClickHandler);
-    });
-    this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._destinationChangeHandler);
-    this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._priceChangeHandler);
+    this._setInnerHandlers();
   }
 
 
@@ -180,12 +173,12 @@ export default class EventEdit extends Abstract {
 
 
   _closeClickHandler() {
-    this._callback.click();
+    this._callback.closeClick();
   }
 
 
   setCloseClickHandler(callback) {
-    this._callback.click = callback;
+    this._callback.closeClick = callback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._closeClickHandler);
   }
 
@@ -231,7 +224,7 @@ export default class EventEdit extends Abstract {
 
   _priceChangeHandler(evt) {
     const finalData = evt.target.value;
-    this.updateData(finalData);
+    this.updateData({price: finalData});
   }
 
 
@@ -239,18 +232,18 @@ export default class EventEdit extends Abstract {
     const finalData = CITIES.find((city) => {
       return (city === evt.target.value);
     });
-    this.updateData(finalData);
+    this.updateData({destination: finalData});
   }
 
 
   _eventTypeClickHandler(evt) {
     const currentType = evt.target.value;
 
-    const typeFromList = EVENT_TYPES.find((type) => {
+    const eventTypeFromList = EVENT_TYPES.find((type) => {
       return (type.toLowerCase() === currentType);
     });
 
-    this.updateData({eventType: typeFromList});
+    this.updateData({eventType: eventTypeFromList});
   }
 
 
@@ -295,5 +288,26 @@ export default class EventEdit extends Abstract {
     const newElement = this.getElement();
     parent.replaceChild(newElement, prevElement);
     prevElement = null;
+    this.restoreHandlers();
+  }
+
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setCloseClickHandler(this._callback.closeClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setFormSubmitHandler(this._callback.formSubmit);
+  }
+
+
+  _setInnerHandlers() {
+    Array.from(this.getElement().querySelectorAll(`.event__offer-checkbox`)).forEach((checkbox) => {
+      checkbox.addEventListener(`click`, this._optionClickHandler);
+    });
+    Array.from(this.getElement().querySelectorAll(`.event__type-list .event__type-input`)).forEach((input) => {
+      input.addEventListener(`click`, this._eventTypeClickHandler);
+    });
+    this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._destinationChangeHandler);
+    this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._priceChangeHandler);
   }
 }

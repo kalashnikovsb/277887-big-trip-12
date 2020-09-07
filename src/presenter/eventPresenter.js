@@ -62,6 +62,7 @@ export default class Event {
 
 
   _replaceEditToRegular() {
+    this._changeData(Object.assign({}, this._event));
     replace(this._regularEvent, this._editingEvent);
     document.removeEventListener(`keydown`, this._escKeyPressHandler);
   }
