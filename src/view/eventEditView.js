@@ -1,4 +1,4 @@
-import Abstract from "./abstractView.js";
+import Smart from "./smartView.js";
 import {getCorrectPreposition, parseTimeToArray} from "../utils/events.js";
 import {
   EVENT_TYPES,
@@ -149,7 +149,7 @@ const createEventEditTemplate = (data) => {
 };
 
 
-export default class EventEdit extends Abstract {
+export default class EventEdit extends Smart {
   constructor(event = BLANK_EVENT) {
     super();
 
@@ -207,6 +207,11 @@ export default class EventEdit extends Abstract {
   }
 
 
+  reset(event) {
+    this.updateData(EventEdit.parseEventToData(event));
+  }
+
+
   static parseEventToData(event) {
     return Object.assign({}, event, {isFavorite: Boolean(event.favorite)});
   }
@@ -223,15 +228,22 @@ export default class EventEdit extends Abstract {
 
 
   _priceChangeHandler(evt) {
-    const finalData = evt.target.value;
+    let finalData = Number(evt.target.value);
+    if (finalData < 0 || isNaN(finalData)) {
+      finalData = 0;
+    }
+    finalData = Math.floor(finalData);
     this.updateData({price: finalData});
   }
 
 
   _destinationChangeHandler(evt) {
-    const finalData = CITIES.find((city) => {
+    let finalData = CITIES.find((city) => {
       return (city === evt.target.value);
     });
+    if (!finalData) {
+      finalData = CITIES[0];
+    }
     this.updateData({destination: finalData});
   }
 
@@ -270,33 +282,6 @@ export default class EventEdit extends Abstract {
     }
 
     this.updateData({additionalOptions: finalData});
-  }
-
-
-  updateData(update) {
-    if (!update) {
-      return;
-    }
-    this._data = Object.assign({}, this._data, update);
-    this.updateElement();
-  }
-
-  updateElement() {
-    let prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.removeElement();
-    const newElement = this.getElement();
-    parent.replaceChild(newElement, prevElement);
-    prevElement = null;
-    this.restoreHandlers();
-  }
-
-
-  restoreHandlers() {
-    this._setInnerHandlers();
-    this.setCloseClickHandler(this._callback.closeClick);
-    this.setFavoriteClickHandler(this._callback.favoriteClick);
-    this.setFormSubmitHandler(this._callback.formSubmit);
   }
 
 
