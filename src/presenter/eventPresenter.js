@@ -3,7 +3,6 @@ import EventEdit from "../view/eventEditView.js";
 import {ESC_KEYCODE} from "../const.js";
 import {renderPosition, render, replace, remove} from "../utils/render.js";
 
-// 6.1.17
 const Mode = {
   DEFAULT: `DEFAULT`,
   EDITING: `EDITING`,
@@ -11,13 +10,10 @@ const Mode = {
 
 
 export default class Event {
-  // 6.1.17
   constructor(container, changeData, changeMode) {
-  // constructor(container, changeData) {
     this._container = container;
     this._changeData = changeData;
 
-    // 6.1.17
     this._changeMode = changeMode;
     this._mode = Mode.DEFAULT;
 
@@ -48,14 +44,10 @@ export default class Event {
       return;
     }
 
-    // if (this._container.getElement().contains(prevRegularEvent.getElement())) {
-    // 6.1.17
     if (this._mode === Mode.DEFAULT) {
       replace(this._regularEvent, prevRegularEvent);
     }
 
-    // 6.1.17
-    // if (this._container.getElement().contains(prevEditingEvent.getElement())) {
     if (this._mode === Mode.EDITING) {
       replace(this._editingEvent, prevEditingEvent);
     }
@@ -64,7 +56,6 @@ export default class Event {
     remove(prevEditingEvent);
   }
 
-  // 6.1.17
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceEditToRegular();
@@ -81,9 +72,8 @@ export default class Event {
   _replaceRegularToEdit() {
     replace(this._editingEvent, this._regularEvent);
     document.addEventListener(`keydown`, this._escKeyPressHandler);
-    // 6.1.17
     this._changeMode();
-    this._mode = Mode.EDITIND;
+    this._mode = Mode.EDITING;
   }
 
 
@@ -91,7 +81,6 @@ export default class Event {
     this._editingEvent.reset(this._event);
     replace(this._regularEvent, this._editingEvent);
     document.removeEventListener(`keydown`, this._escKeyPressHandler);
-    // 6.1.17
     this._mode = Mode.DEFAULT;
   }
 
@@ -99,7 +88,6 @@ export default class Event {
     this._changeData(event);
     replace(this._regularEvent, this._editingEvent);
     document.removeEventListener(`keydown`, this._escKeyPressHandler);
-    // 6.1.17
     this._mode = Mode.DEFAULT;
   }
 
@@ -115,32 +103,4 @@ export default class Event {
       this._replaceEditToRegular();
     }
   }
-
-
-  // updateData(update) {
-  //   if (!update) {
-  //     return;
-  //   }
-  //   this._data = Object.assign({}, this._data, update);
-  //   this.updateElement();
-  // }
-  //
-  //
-  // updateElement() {
-  //   let prevElement = this.getElement();
-  //   const parent = prevElement.parentElement;
-  //   this.removeElement();
-  //   const newElement = this.getElement();
-  //   parent.replaceChild(newElement, prevElement);
-  //   prevElement = null;
-  //   this.restoreHandlers();
-  // }
-  //
-  //
-  // restoreHandlers() {
-  //   this._setInnerHandlers();
-  //   this.setCloseClickHandler(this._callback.closeClick);
-  //   this.setFavoriteClickHandler(this._callback.favoriteClick);
-  //   this.setFormSubmitHandler(this._callback.formSubmit);
-  // }
 }

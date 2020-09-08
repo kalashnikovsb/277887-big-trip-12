@@ -23,7 +23,6 @@ export default class Trip {
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
     this._eventChangeHandler = this._eventChangeHandler.bind(this);
 
-    // 6.1.17
     this._modeChangeHandler = this._modeChangeHandler.bind(this);
 
     this._daysArray = [];
@@ -82,9 +81,7 @@ export default class Trip {
 
 
   _renderEvent(container, event) {
-    // 6.1.17
     const eventPresenter = new EventPresenter(container, this._eventChangeHandler, this._modeChangeHandler);
-    // const eventPresenter = new EventPresenter(container, this._eventChangeHandler);
     eventPresenter.init(event);
     this._eventPresenters[event.id] = eventPresenter;
   }
@@ -164,7 +161,6 @@ export default class Trip {
   }
 
 
-  // 6.1.17
   _modeChangeHandler() {
     Object.values(this._eventPresenters).forEach((presenter) => {
       presenter.resetView();
