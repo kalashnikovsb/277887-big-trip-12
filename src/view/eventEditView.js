@@ -51,6 +51,42 @@ const renderAdditionalOptions = (options) => {
 };
 
 
+const renderDestinationInfo = (destinationInfo, destinationPhotos) => {
+  return (
+    `<section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">${destinationInfo}</p>
+      ${renderPhotosList(destinationPhotos)}
+    </section>`
+  );
+};
+
+
+const renderPhotosList = (photos) => {
+  if (photos.length === 0) {
+    return (``);
+  }
+
+  let photosList = ``;
+  photos.forEach((photo) => {
+    photosList += renderPhoto(photo);
+  });
+
+  return (
+    `<div class="event__photos-container">
+      <div class="event__photos-tape">
+      ${photosList}
+      </div>
+    </div>`
+  );
+};
+
+
+const renderPhoto = (photoUrl) => {
+  return `<img class="event__photo" src="${photoUrl}" alt="Event photo">`;
+};
+
+
 const renderCorrectTime = (date) => {
   const [year, month, day, hours, minutes] = parseTimeToArray(date);
   return `${String(year).slice(-2)}/${month}/${day} ${hours}:${minutes}`;
@@ -58,7 +94,7 @@ const renderCorrectTime = (date) => {
 
 
 const createEventEditTemplate = (data) => {
-  const {eventType, destination, timeStart, timeEnd, additionalOptions, price, isFavorite} = data;
+  const {eventType, destination, timeStart, timeEnd, additionalOptions, price, isFavorite, destinationInfo, destinationPhotos} = data;
 
   const transferEvents = EVENT_TYPES.slice(0, 7);
   const activityEvents = EVENT_TYPES.slice(7);
@@ -142,6 +178,7 @@ const createEventEditTemplate = (data) => {
               ${renderAdditionalOptions(additionalOptions)}
             </div>
           </section>
+          ${renderDestinationInfo(destinationInfo, destinationPhotos)}
         </section>
       </form>
     </li>`
@@ -242,7 +279,7 @@ export default class EventEdit extends Smart {
       return (city === evt.target.value);
     });
     if (!finalData) {
-      finalData = CITIES[0];
+      finalData = ``;
     }
     this.updateData({destination: finalData});
   }
