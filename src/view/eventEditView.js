@@ -178,7 +178,7 @@ const createEventEditTemplate = (data) => {
               ${renderAdditionalOptions(additionalOptions)}
             </div>
           </section>
-          ${renderDestinationInfo(destinationInfo, destinationPhotos)}
+          ${destination ? renderDestinationInfo(destinationInfo, destinationPhotos) : ``}
         </section>
       </form>
     </li>`
