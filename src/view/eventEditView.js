@@ -351,4 +351,12 @@ export default class EventEdit extends Smart {
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._destinationChangeHandler);
     this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._priceChangeHandler);
   }
+
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setCloseClickHandler(this._callback.closeClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setFormSubmitHandler(this._callback.formSubmit);
+  }
 }

@@ -29,9 +29,6 @@ export default class Smart extends Abstract {
 
 
   restoreHandlers() {
-    this._setInnerHandlers();
-    this.setCloseClickHandler(this._callback.closeClick);
-    this.setFavoriteClickHandler(this._callback.favoriteClick);
-    this.setFormSubmitHandler(this._callback.formSubmit);
+    throw new Error(`Abstract method not implemented: resetHandlers`);
   }
 }
