@@ -5,6 +5,7 @@ import {
   CITIES,
   ADDITIONAL_OPTIONS,
   BLANK_EVENT,
+  DESCRIPTIONS,
 } from "../const.js";
 
 
@@ -288,13 +289,18 @@ export default class EventEdit extends Smart {
 
 
   _destinationChangeHandler(evt) {
-    let finalData = CITIES.find((city) => {
-      return (city === evt.target.value);
+    let index = 0;
+    let finalData = null;
+    CITIES.forEach((city, i) => {
+      if (city === evt.target.value) {
+        index = i;
+        finalData = city;
+      }
     });
     if (!finalData) {
       finalData = ``;
     }
-    this.updateData({destination: finalData});
+    this.updateData({destination: finalData, destinationInfo: DESCRIPTIONS[index]});
   }
 
 
