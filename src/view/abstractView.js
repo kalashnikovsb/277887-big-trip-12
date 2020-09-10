@@ -1,5 +1,6 @@
 import {createElement} from "../utils/events.js";
 
+
 export default class Abstract {
   constructor() {
     if (new.target === Abstract) {
@@ -9,9 +10,11 @@ export default class Abstract {
     this._callback = {};
   }
 
+
   getTemplate() {
     throw new Error(`Can't instantiate Abstract, only concrete one.`);
   }
+
 
   getElement() {
     if (!this._element) {
@@ -19,6 +22,7 @@ export default class Abstract {
     }
     return this._element;
   }
+
 
   removeElement() {
     this._element = null;

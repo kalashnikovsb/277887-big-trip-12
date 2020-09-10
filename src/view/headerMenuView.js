@@ -1,4 +1,5 @@
-import Abstract from "./Abstract.js";
+import Abstract from "./abstractView.js";
+
 
 const createHeaderMenuTemplate = () => {
   return (
@@ -8,6 +9,7 @@ const createHeaderMenuTemplate = () => {
     </nav>`
   );
 };
+
 
 export default class HeaderMenu extends Abstract {
   getTemplate() {

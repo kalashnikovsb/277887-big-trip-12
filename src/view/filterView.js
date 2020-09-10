@@ -1,4 +1,5 @@
-import Abstract from "./Abstract.js";
+import Abstract from "./abstractView.js";
+
 
 const createTimeFilterTemplate = () => {
   return (
@@ -22,6 +23,7 @@ const createTimeFilterTemplate = () => {
     </form>`
   );
 };
+
 
 export default class Filter extends Abstract {
   getTemplate() {

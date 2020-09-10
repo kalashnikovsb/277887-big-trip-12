@@ -1,4 +1,4 @@
-import Abstract from "./Abstract.js";
+import Abstract from "./abstractView.js";
 import {getCorrectPreposition, parseTimeToArray} from "../utils.js";
 import {
   EVENT_TYPES,

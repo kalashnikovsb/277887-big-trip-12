@@ -1,4 +1,5 @@
-import Abstract from "./Abstract.js";
+import Abstract from "./abstractView.js";
+
 
 const renderCorrectTime = (string) => {
   if (!string) {
@@ -8,6 +9,7 @@ const renderCorrectTime = (string) => {
   let result = currentDate.toString().slice(4, 10);
   return result;
 };
+
 
 const createDayItemTemplate = (dayNumber = ``, date = ``) => {
   return (
@@ -19,6 +21,7 @@ const createDayItemTemplate = (dayNumber = ``, date = ``) => {
     </li>`
   );
 };
+
 
 export default class DayItem extends Abstract {
   constructor(dayNumber, date) {

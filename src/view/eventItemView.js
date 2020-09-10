@@ -1,5 +1,6 @@
-import Abstract from "./Abstract.js";
+import Abstract from "./abstractView.js";
 import {getCorrectPreposition, parseTimeToArray} from "../utils/events.js";
+
 
 const renderAdditionalOptions = (options) => {
   return options.map((option) => {
@@ -12,10 +13,12 @@ const renderAdditionalOptions = (options) => {
   }).join(``);
 };
 
+
 const renderCorrectTime = (date) => {
   const [year, month, day, hours, minutes] = parseTimeToArray(date);
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
+
 
 const createEventItemTemplate = (event) => {
   const {eventType, destination, additionalOptions, timeStart, timeEnd, price} = event;
@@ -57,6 +60,7 @@ const createEventItemTemplate = (event) => {
   );
 };
 
+
 export default class EventItem extends Abstract {
   constructor(event) {
     super();
@@ -64,13 +68,16 @@ export default class EventItem extends Abstract {
     this._openClickHandler = this._openClickHandler.bind(this);
   }
 
+
   getTemplate() {
     return createEventItemTemplate(this._event);
   }
 
+
   _openClickHandler() {
     this._callback.click();
   }
+
 
   setOpenClickHandler(callback) {
     this._callback.click = callback;
