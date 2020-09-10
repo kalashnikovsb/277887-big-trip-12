@@ -216,11 +216,6 @@ export default class EventEdit extends Smart {
   }
 
 
-
-
-
-
-
   _setStartDatepicker() {
     if (this._datepickerStart) {
       this._datepickerStart.destroy();
@@ -230,7 +225,8 @@ export default class EventEdit extends Smart {
       this._datepickerStart = flatpickr(
           this.getElement().querySelector(`#event-start-time-1`),
           {
-            dateFormat: `j F`,
+            dateFormat: `d/m/y H:i`,
+            enableTime: true,
             defaultDate: this._data.timeStart,
             onChange: this._timeStartChangeHandler
           }
@@ -247,7 +243,8 @@ export default class EventEdit extends Smart {
       this._datepickerEnd = flatpickr(
           this.getElement().querySelector(`#event-end-time-1`),
           {
-            dateFormat: `j F`,
+            dateFormat: `d/m/y H:i`,
+            enableTime: true,
             defaultDate: this._data.timeEnd,
             onChange: this._timeEndChangeHandler
           }
@@ -256,24 +253,16 @@ export default class EventEdit extends Smart {
   }
 
   _timeStartChangeHandler([userDate]) {
-    userDate.setHours(23, 59, 59, 999);
     this.updateData({
       timeStart: userDate
     });
   }
 
   _timeEndChangeHandler([userDate]) {
-    userDate.setHours(23, 59, 59, 999);
     this.updateData({
       timeEnd: userDate
     });
   }
-
-
-
-
-
-
 
 
   getTemplate() {
