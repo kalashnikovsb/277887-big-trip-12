@@ -7,6 +7,8 @@ import {
   BLANK_EVENT,
   DESCRIPTIONS,
 } from "../const.js";
+import flatpickr from "flatpickr";
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 
 const renderEventsGroup = (events, currentType) => {
@@ -193,6 +195,9 @@ export default class EventEdit extends Smart {
 
     this._data = EventEdit.parseEventToData(event);
 
+    this._timeStartChangeHandler = this._timeStartChangeHandler.bind(this);
+    this._timeEndChangeHandler = this._timeEndChangeHandler.bind(this);
+
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
@@ -203,7 +208,72 @@ export default class EventEdit extends Smart {
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
 
     this._setInnerHandlers();
+
+    this._datepickerStart = null;
+    this._datepickerEnd = null;
+    this._setStartDatepicker();
+    this._setEndDatepicker();
   }
+
+
+
+
+
+
+
+  _setStartDatepicker() {
+    if (this._datepickerStart) {
+      this._datepickerStart.destroy();
+      this._datepickerStart = null;
+    }
+    if (this._data.timeStart) {
+      this._datepickerStart = flatpickr(
+          this.getElement().querySelector(`#event-start-time-1`),
+          {
+            dateFormat: `j F`,
+            defaultDate: this._data.timeStart,
+            onChange: this._timeStartChangeHandler
+          }
+      );
+    }
+  }
+
+  _setEndDatepicker() {
+    if (this._datepickerEnd) {
+      this._datepickerEnd.destroy();
+      this._datepickerEnd = null;
+    }
+    if (this._data.timeEnd) {
+      this._datepickerEnd = flatpickr(
+          this.getElement().querySelector(`#event-end-time-1`),
+          {
+            dateFormat: `j F`,
+            defaultDate: this._data.timeEnd,
+            onChange: this._timeEndChangeHandler
+          }
+      );
+    }
+  }
+
+  _timeStartChangeHandler([userDate]) {
+    userDate.setHours(23, 59, 59, 999);
+    this.updateData({
+      timeStart: userDate
+    });
+  }
+
+  _timeEndChangeHandler([userDate]) {
+    userDate.setHours(23, 59, 59, 999);
+    this.updateData({
+      timeEnd: userDate
+    });
+  }
+
+
+
+
+
+
 
 
   getTemplate() {
@@ -358,5 +428,7 @@ export default class EventEdit extends Smart {
     this.setCloseClickHandler(this._callback.closeClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this._setStartDatepicker();
+    this._setEndDatepicker();
   }
 }
