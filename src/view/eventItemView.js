@@ -1,5 +1,6 @@
 import Abstract from "./abstractView.js";
 import {getCorrectPreposition, parseTimeToArray} from "../utils/events.js";
+import moment from "moment";
 
 
 const renderAdditionalOptions = (options) => {
@@ -17,6 +18,35 @@ const renderAdditionalOptions = (options) => {
 const renderCorrectTime = (date) => {
   const [year, month, day, hours, minutes] = parseTimeToArray(date);
   return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
+
+const renderDuration = (timeStart, timeEnd) => {
+  let start = moment(timeStart);
+  let end = moment(timeEnd);
+
+  start.set(`seconds`, `59`);
+  start.set(`milliseconds`, `999`);
+  end.set(`seconds`, `59`);
+  end.set(`milliseconds`, `999`);
+
+  let days = end.diff(start, `days`);
+  days = (days < 10) ? `0` + days : days;
+  days = Number(days) === 0 ? `` : days;
+
+  end.subtract(days, `days`);
+  let hours = end.diff(start, `hours`);
+  hours = (hours < 10) ? `0` + hours : hours;
+  hours = Number(hours) === 0 ? `` : hours;
+
+  end.subtract(hours, `hours`);
+  let minutes = end.diff(start, `minutes`);
+  minutes = (minutes < 10) ? `0` + minutes : minutes;
+  minutes = Number(minutes) === 0 ? `` : minutes;
+
+  const resultString = `${!days ? `` : days + `D`} ${!hours ? `` : hours + `H`} ${!minutes ? `` : minutes + `M`}`;
+
+  return resultString;
 };
 
 
@@ -40,7 +70,7 @@ const createEventItemTemplate = (event) => {
             ${renderCorrectTime(timeEnd)}">${timeEnd.toString().slice(16, 21)}
             </time>
           </p>
-          <p class="event__duration">90M</p>
+          <p class="event__duration">${renderDuration(timeStart, timeEnd)}</p>
         </div>
 
         <p class="event__price">

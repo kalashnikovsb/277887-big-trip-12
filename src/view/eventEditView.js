@@ -95,6 +95,13 @@ const renderCorrectTime = (date) => {
   return `${String(year).slice(-2)}/${month}/${day} ${hours}:${minutes}`;
 };
 
+const submitIsDisabled = (timeStart, timeEnd) => {
+  if (timeEnd.getTime() < timeStart.getTime()) {
+    return true;
+  }
+  return false;
+};
+
 
 const createEventEditTemplate = (data) => {
   const {eventType, destination, timeStart, timeEnd, additionalOptions, price, isFavorite, destinationInfo, destinationPhotos} = data;
@@ -158,7 +165,7 @@ const createEventEditTemplate = (data) => {
             <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${submitIsDisabled(timeStart, timeEnd) ? `disabled` : ``}>Save</button>
           <button class="event__reset-btn" type="reset">Delete</button>
 
           <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavoriteChecked}>
@@ -228,9 +235,10 @@ export default class EventEdit extends Smart {
             dateFormat: `d/m/y H:i`,
             enableTime: true,
             defaultDate: this._data.timeStart,
-            onChange: this._timeStartChangeHandler
+            onClose: this._timeStartChangeHandler
           }
       );
+      this._datepickerStart = null;
     }
   }
 
@@ -239,6 +247,8 @@ export default class EventEdit extends Smart {
       this._datepickerEnd.destroy();
       this._datepickerEnd = null;
     }
+
+
     if (this._data.timeEnd) {
       this._datepickerEnd = flatpickr(
           this.getElement().querySelector(`#event-end-time-1`),
@@ -246,9 +256,10 @@ export default class EventEdit extends Smart {
             dateFormat: `d/m/y H:i`,
             enableTime: true,
             defaultDate: this._data.timeEnd,
-            onChange: this._timeEndChangeHandler
+            onClose: this._timeEndChangeHandler
           }
       );
+      this._datepickerEnd = null;
     }
   }
 
